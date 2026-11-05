@@ -1,0 +1,68 @@
+{
+  "name": "joplin-plugin-code-block-studio",
+  "version": "1.3.3",
+  "private": true,
+  "description": "Readable code blocks with syntax highlighting, sticky Copy controls and offline formatting previews with aligned scrolling and visible changes.",
+  "author": "Leonard Powers",
+  "contributors": [
+    {
+      "name": "Ada (OpenAI Codex)"
+    }
+  ],
+  "keywords": [
+    "joplin-plugin",
+    "code-blocks",
+    "syntax-highlighting",
+    "formatter",
+    "python",
+    "shell",
+    "sql"
+  ],
+  "files": [
+    "publish/",
+    "docs/images/",
+    "assets/",
+    "CREDITS.md",
+    "CHANGELOG.md"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/HumuHumuUK/codeblock-studio",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HumuHumuUK/codeblock-studio.git"
+  },
+  "funding": "https://ko-fi.com/W4J72A4KLF",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dist": "npm run build",
+    "screenshots": "node scripts/screenshots.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "overrides": {
+    "lodash-es": "4.18.1"
+  },
+  "dependencies": {
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "@prettier/plugin-php": "0.26.0",
+    "@prettier/plugin-xml": "3.4.2",
+    "@wasm-fmt/clang-format": "23.1.1",
+    "@wasm-fmt/gofmt": "0.7.3",
+    "@wasm-fmt/ruff_fmt": "0.15.20",
+    "@wasm-fmt/shfmt": "0.2.7",
+    "chevrotain": "11.2.0",
+    "diff": "9.0.0",
+    "highlight.js": "11.12.0",
+    "markdown-it": "14.3.3",
+    "prettier": "3.9.10",
+    "prettier-plugin-toml": "1.0.1",
+    "sql-formatter": "15.9.0"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^22.0.0",
+    "esbuild": "0.28.1",
+    "playwright": "^1.56.0",
+    "typescript": "^5.9.0"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "manifest_version": 1,
+  "id": "local.lpowers.code-studio",
+  "app_min_version": "3.3",
+  "version": "1.3.3",
+  "name": "Code Block Studio",
+  "description": "Readable code blocks with syntax highlighting, sticky Copy controls and offline formatting previews with aligned scrolling and visible changes.",
+  "author": "Leonard Powers",
+  "homepage_url": "https://github.com/HumuHumuUK/codeblock-studio",
+  "repository_url": "https://github.com/HumuHumuUK/codeblock-studio",
+  "keywords": [
+    "code",
+    "code blocks",
+    "syntax highlighting",
+    "line numbers",
+    "copy",
+    "formatting",
+    "python",
+    "shell",
+    "sql"
+  ],
+  "categories": [
+    "appearance",
+    "viewer"
+  ],
+  "platforms": [
+    "desktop"
+  ],
+  "screenshots": [
+    { "src": "docs/images/code-cards.png", "label": "Python and SQL code cards with syntax highlighting, line numbers, filename labels and Format, Wrap and Copy controls." },
+    { "src": "docs/images/format-comparison.png", "label": "Original and formatted Python aligned side by side, with changed spaces, line breaks and synchronised scrolling." },
+    { "src": "docs/images/wrapped-code.png", "label": "A long line wrapped within a code card while retaining its original line number." }
+  ],
+  "icons": { "48": "assets/icon-48.png", "128": "assets/icon-128.png" }
+}

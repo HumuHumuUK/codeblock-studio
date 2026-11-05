@@ -1,0 +1,8 @@
+/releases/** export-ignore
+/archive/** export-ignore
+/docs/PROJECT.md export-ignore
+/docs/RESEARCH.md export-ignore
+/VALIDATION.md export-ignore
+/code-studio-preview.png export-ignore
+/api/** whitespace=-blank-at-eof
+/vendor-licenses/** whitespace=-blank-at-eof
