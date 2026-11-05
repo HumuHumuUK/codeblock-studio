@@ -1,7 +1,8 @@
 import { build } from 'esbuild';
-import { mkdir, rm, copyFile, readFile, writeFile, readdir } from 'node:fs/promises';
+import { mkdir, rm, copyFile, readFile, writeFile, readdir, cp } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { brotliDecompressSync } from 'node:zlib';
 import { createRequire } from 'node:module';
 const buildRequire = createRequire(import.meta.url);
 
@@ -37,12 +38,19 @@ for (const [name, filename] of [
 }
 await writeFile('dist/MARKDOWN-IT-DEPENDENCIES.txt', dependencyLicenses);
 const wasmAssets = [
-  ['ruff_fmt', 'ruff_fmt_bg.wasm'], ['shfmt', 'shfmt.wasm'],
-  ['gofmt', 'gofmt.wasm'], ['clang-format', 'clang-format.wasm'],
+  ['@wasm-fmt/ruff_fmt/ruff_fmt_bg.wasm', 'ruff_fmt_bg.wasm'], ['@wasm-fmt/shfmt/shfmt.wasm', 'shfmt.wasm'],
+  ['@wasm-fmt/gofmt/gofmt.wasm', 'gofmt.wasm'], ['@wasm-fmt/clang-format/clang-format.wasm', 'clang-format.wasm'],
+  ['@wasm-fmt/lua_fmt/lua_fmt_bg.wasm', 'lua_fmt_bg.wasm'], ['@wasm-fmt/dart_fmt/dart_fmt.wasm', 'dart_fmt.wasm'],
+  ['@dprint/dockerfile/plugin.wasm', 'dockerfile.wasm'], ['@dprint/terraform/plugin.wasm', 'terraform.wasm'],
+  ['@scalar/rust-fmt/rust_fmt.wasm.br', 'rust_fmt.wasm'],
 ];
-for (const [pkg, file] of wasmAssets) await copyFile(`node_modules/@wasm-fmt/${pkg}/${file}`, `dist/${file}`);
+for (const [source, file] of wasmAssets) {
+  const bytes = await readFile(`node_modules/${source}`);
+  await writeFile(`dist/${file}`, source.endsWith('.br') ? brotliDecompressSync(bytes) : bytes);
+}
 const bundledPackages = new Set(Object.keys(runtime.metafile.inputs)
   .map(path => path.match(/^(.*node_modules\/(?:@[^/]+\/)?[^/]+)\//)?.[1]).filter(Boolean));
+for (const name of ['@dprint/dockerfile', '@dprint/terraform']) bundledPackages.add(`node_modules/${name}`);
 let allLicenses = '';
 for (const directory of [...bundledPackages].sort()) {
   const pkg = JSON.parse(await readFile(`${directory}/package.json`, 'utf8'));
@@ -54,6 +62,7 @@ for (const directory of [...bundledPackages].sort()) {
 await writeFile('dist/BUNDLED-DEPENDENCY-LICENSES.txt', allLicenses);
 await mkdir('dist/vendor-licenses');
 for (const file of await readdir('vendor-licenses')) await copyFile(`vendor-licenses/${file}`, `dist/vendor-licenses/${file}`);
+await cp('node_modules/@scalar/rust-fmt/licenses', 'dist/vendor-licenses/rust', { recursive: true });
 const manifest = JSON.parse(await readFile('src/manifest.json', 'utf8'));
 await mkdir('publish', { recursive: true });
 const archive = `publish/${manifest.id}.jpl`;

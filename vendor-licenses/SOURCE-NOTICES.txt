@@ -1,0 +1,59 @@
+Code Block Studio 1.4.0 — additional bundled formatter notices
+
+The original plugin remains MIT licensed. The engines and embedded libraries
+listed below retain their own licences. Their source is not note content and
+is never executed as a note snippet. These are formatting/parsing tools only.
+
+Lua: @wasm-fmt/lua_fmt 0.3.3 (MIT wrapper)
+https://github.com/wasm-fmt/lua_fmt/tree/fd86f4e17d1ba0bb347b7e66d530c6dd44ff858a
+StyLua is MPL-2.0; the licence is included as STYLUA-MPL-2.0.txt.
+Its unmodified source is available at https://github.com/JohnnyMorganz/StyLua
+and the wrapper's Cargo.lock identifies the exact dependency revision.
+The wrapper source, build configuration and local regex patch are available
+at the pinned source link above.
+
+Dart: @wasm-fmt/dart_fmt 0.3.0 (MIT wrapper)
+https://github.com/wasm-fmt/dart_fmt/tree/3f3d3f4e185a25e1a5689d65b9c8df5071598fdc
+The upstream dart_style and Dart SDK BSD notices are included separately as
+DART-STYLE-LICENSE.txt and DART-SDK-LICENSE.txt.
+https://github.com/dart-lang/dart_style
+https://github.com/dart-lang/sdk
+
+Dockerfile: @dprint/dockerfile 0.7.0
+https://github.com/dprint/dprint-plugin-dockerfile
+Terraform/HCL: @dprint/terraform 0.1.1
+https://github.com/dprint/dprint-plugin-terraform
+Their complete distributed licence texts, including Terraform's MPL-2.0
+HCL/OpenTofu and third-party notices, are in BUNDLED-DEPENDENCY-LICENSES.txt.
+The unmodified MPL-covered sources can be obtained from the formatter's
+repository and its pinned Go module/build files:
+https://github.com/hashicorp/hcl
+https://github.com/opentofu/opentofu
+
+Rust: @scalar/rust-fmt 0.3.0 (MIT wrapper)
+https://github.com/scalar/formatters
+The package's embedded-library notices and licence texts are included under
+vendor-licenses/rust/. Its build script pins the Rust/rustfmt source toolchain.
+The unmodified MPL-2.0 option-ext source is available at:
+https://github.com/xdg-rs/dirs/tree/master/option-ext
+Additional licence texts listed as gaps in the upstream package's NOTICE.md
+are supplied here for foldhash 0.2.0, ryu 1.0.20, unicode-ident 1.0.24 and
+wasi-libc. Crate notices were retrieved from the published source archives:
+https://crates.io/api/v1/crates/foldhash/0.2.0/download
+https://crates.io/api/v1/crates/ryu/1.0.20/download
+https://crates.io/api/v1/crates/unicode-ident/1.0.24/download
+The wasi-libc notice is from:
+https://github.com/WebAssembly/wasi-libc/blob/main/LICENSE
+The wasi-libc licence family and its cloudlibc, musl and musl-fts notices
+are included under the WASI-LIBC-* filenames.
+These additions supplement the upstream notices rather than replacing them.
+
+PowerShell: prettier-plugin-powershell 2.2.0 (MIT)
+https://github.com/Nick2bad4u/Prettier-Plugin-Powershell
+Its licence and the licences of bundled JavaScript dependencies are included
+in BUNDLED-DEPENDENCY-LICENSES.txt.
+
+The BASIC layout formatter and HCL highlighting grammar are original plugin
+implementation covered by the root MIT licence. No retro compiler,
+interpreter, ROM, game or magazine listing is bundled. The documentation's
+short examples were written for this project.

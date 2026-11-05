@@ -1,5 +1,12 @@
 # Change history
 
+## 1.4.0 — 5 November 2026 (publication candidate)
+
+- Added offline formatting for PowerShell 7, Lua, Dart, Rust 2021, Dockerfile and Terraform/OpenTofu/HCL, plus Oracle PL/SQL, Snowflake, DuckDB, Redshift, DB2 and Hive SQL dialects.
+- Added conservative layout formatting for generic BASIC, BBC BASIC, Sinclair BASIC, Commodore BASIC V2, Locomotive BASIC, Applesoft, GW-BASIC, QBasic, Atari BASIC and AMOS. Program numbers, statement text, case, strings, comments, DATA and physical statement boundaries are preserved.
+- Added local HCL syntax colouring, recognisable language labels, per-language examples and practical/retro formatting guidance. All languages retain the existing preview, Copy, Apply and editor Undo paths.
+- Cached asynchronous formatter initialisation, checked PowerShell token/literal preservation, and included the new WASM engines, upstream notices and source locations in the installer.
+
 ## 1.3.3 — 5 November 2026 (publication candidate)
 
 - Moved formatting feedback, including “Already formatted” and errors, into the sticky toolbar directly below Format, Wrap and Copy so it stays visible on long code blocks.

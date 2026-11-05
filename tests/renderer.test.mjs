@@ -68,7 +68,7 @@ test('explicit text never receives guessed highlighting', () => {
 });
 
 test('Format is offered only for explicit supported languages with a precise block reference', () => {
-  const html = render('```rust\nfn main() {}\n```\n\n```js title="sample.js"\nconst a=1;\n```');
+  const html = render('```fish\necho hello\n```\n\n```js title="sample.js"\nconst a=1;\n```');
   assert.equal((html.match(/data-cs-action="format"/g) || []).length, 1);
   assert.match(html, /data-cs-fence-index="1"/);
   assert.match(html, /data-cs-info="js title=&quot;sample.js&quot;"/);

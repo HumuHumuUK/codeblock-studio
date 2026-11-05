@@ -1,6 +1,6 @@
 # Publication preparation
 
-Prepared on 5 November 2026. Candidate: **Code Block Studio 1.3.3**.
+Prepared on 5 November 2026. Candidate: **Code Block Studio 1.4.0**.
 
 **GitHub source publication is authorised; npm and Joplin catalogue publication remain on hold.** Leonard requested public hosting under `HumuHumuUK` and supplied the Ko-fi support URL. The package remains `private: true`, so public GitHub hosting does not enable npm publication. There is no automatic release or registry submission workflow.
 

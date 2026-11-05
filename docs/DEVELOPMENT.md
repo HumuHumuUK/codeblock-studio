@@ -21,6 +21,9 @@ The tests cover renderer behaviour, exact copying, wrapping, formatting, block t
 - Prettier imports inside formatter plugins resolve to `prettier/standalone` during bundling. This keeps Node configuration-loading helpers out of the Joplin runtime bundle.
 - TOML uses the pinned pure JavaScript plugin. Its parser and lexer share the pinned root Chevrotain version; do not replace this with a native addon without checking portability.
 - Keep `vendor-licenses/`, bundled dependency notices and the font licence in release packages.
+- The Lua/Dart, dprint Dockerfile/HCL and Scalar Rust assets are copied into the installer. Rust's Brotli compression is expanded during the build using Node's standard library; its runtime receives raw bytes. Keep the Rust embedded-library notices and binary-only dprint package licences in the installer too.
+- Dart is deliberately pinned to `@wasm-fmt/dart_fmt` 0.3.0: the 0.4.0 package failed valid input with `RuntimeError: illegal cast` in the current host. Recheck both Node and Joplin when upgrading it. The pinned Scalar browser entry is imported directly because the package's Node entry resolves an unbundled asset path.
+- PowerShell's formatter may synthesise missing delimiters; our token/literal guard rejects those changes. Its output targets PowerShell 7. Retro BASIC formatting changes only leading layout whitespace and line endings; tests must preserve every physical statement and program number.
 - The `lodash-es` override selects 4.18.1 to address security advisories while retaining the existing Chevrotain/TOML parser versions. Markdown-it 14.3.3 and esbuild 0.28.1 address their reported advisories. Recheck compatibility and the audit when changing these pins.
 - Joplin declarations and the API shim are in `api/`, with their generator licence.
 

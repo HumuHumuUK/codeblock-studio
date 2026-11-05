@@ -27,7 +27,7 @@ test('format supported languages locally and keep output valid', async () => {
 
 test('invalid code and unsupported languages fail rather than rewriting source', async () => {
   await assert.rejects(formatCode('const = ;', 'javascript'));
-  await assert.rejects(formatCode('fn example() {}', 'rust'), /not available/);
+  await assert.rejects(formatCode('echo hello', 'fish'), /not available/);
   await assert.rejects(formatCode('x'.repeat(500001), 'javascript'), /too large/);
 });
 

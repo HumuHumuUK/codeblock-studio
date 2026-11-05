@@ -147,3 +147,202 @@ query{user(id:1){id name}}
 ```angular
 <div>{{name}}</div>
 ```
+
+## Additional practical languages
+
+PowerShell formatting targets PowerShell 7; Rust uses the 2021 edition. The new formatters run locally and never execute these examples.
+
+### powershell
+
+```powershell
+function Get-Greeting{
+param([string]$Name)
+Write-Output "Hello, $Name"
+}
+```
+
+### lua
+
+```lua
+local values={1,2,3}
+for _,value in ipairs(values) do print(value) end
+```
+
+### dart
+
+```dart
+void main(){final names=["Ada","Leonard"];print(names.join(", "));}
+```
+
+### rust
+
+```rust
+fn main(){let values=vec![1,2,3];println!("{:?}",values);}
+```
+
+### dockerfile
+
+```dockerfile
+from alpine:3.20
+workdir /app
+copy . .
+run printf "Hello from Code Block Studio\n"
+```
+
+### terraform
+
+```terraform
+locals {
+project="code-block-studio"
+enabled=true
+}
+```
+
+### hcl
+
+```hcl
+service "example" {
+port=8080
+tags=["local","demo"]
+}
+```
+
+### plsql
+
+```plsql
+select id,name from users where rownum<=5;
+```
+
+### snowflake
+
+```snowflake
+select id,name from users qualify row_number() over (order by id)=1;
+```
+
+### duckdb
+
+```duckdb
+select * from range(5);
+```
+
+### redshift
+
+```redshift
+select top 5 id,name from users;
+```
+
+### db2
+
+```db2
+select id,name from users fetch first 5 rows only;
+```
+
+### hive
+
+```hive
+select id,name from users limit 5;
+```
+
+## Retro BASIC listings
+
+These text listings keep their original program numbers, case, statements, strings, comments and DATA. Formatting aligns program numbers and indents recognised blocks; it does not renumber or split lines. Use explicit dialect labels for the relevant loop/block rules. Generic BASIC colouring does not recognise every machine-specific command.
+
+### basic
+
+```basic
+10 FOR I=1 TO 3
+20 PRINT "HELLO";I
+30 NEXT I
+100 END
+```
+
+### bbc-basic
+
+```bbc-basic
+10 counter%=0
+20 REPEAT
+30 counter%=counter%+1
+40 PRINT counter%
+50 UNTIL counter%=3
+60 END
+```
+
+### sinclair-basic
+
+```sinclair-basic
+10 FOR n=1 TO 3
+20 PRINT "HELLO ";n
+30 NEXT n
+40 STOP
+```
+
+### commodore-basic
+
+```commodore-basic
+10 REM COMMODORE DEMO
+20 FOR I=1 TO 3
+30 PRINT "HELLO";I
+40 NEXT I
+50 END
+```
+
+### locomotive-basic
+
+```locomotive-basic
+10 MODE 1
+20 FOR i=1 TO 3
+30 PRINT "HELLO";i
+40 NEXT i
+50 END
+```
+
+### applesoft
+
+```applesoft
+10 HOME
+20 FOR I=1 TO 3
+30 PRINT "HELLO";I
+40 NEXT I
+50 END
+```
+
+### gwbasic
+
+```gwbasic
+10 CLS
+20 FOR I=1 TO 3
+30 PRINT "HELLO";I
+40 NEXT I
+50 END
+```
+
+### qbasic
+
+```qbasic
+FOR n=1 TO 3
+IF n=2 THEN
+PRINT "MIDDLE"
+ELSE
+PRINT n
+END IF
+NEXT n
+```
+
+### atari-basic
+
+```atari-basic
+10 GRAPHICS 0
+20 FOR I=1 TO 3
+30 PRINT "HELLO";I
+40 NEXT I
+50 END
+```
+
+### amos
+
+```amos
+For I=1 To 3
+Print "HELLO";I
+Next I
+End
+```

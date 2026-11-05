@@ -2,6 +2,17 @@ import hljs from 'highlight.js';
 import type MarkdownIt from 'markdown-it';
 import { formatParser } from './formatLanguages';
 
+hljs.registerLanguage('hcl', () => ({
+  name: 'HCL', aliases: ['terraform', 'tf', 'opentofu'],
+  keywords: { keyword: 'resource data variable output locals provider module terraform dynamic for in if', literal: 'true false null' },
+  contains: [
+    hljs.HASH_COMMENT_MODE, hljs.C_LINE_COMMENT_MODE, hljs.C_BLOCK_COMMENT_MODE,
+    hljs.END_SAME_AS_BEGIN({ className: 'string', begin: /<<-?([A-Za-z_]\w*)/, end: /^[ \t]*([A-Za-z_]\w*)[ \t]*$/ }),
+    hljs.QUOTE_STRING_MODE, hljs.C_NUMBER_MODE,
+    { className: 'attr', match: /\b[A-Za-z_]\w*(?=\s*=)/ },
+  ],
+}));
+
 interface Options { settingValue?: (key: string) => unknown }
 interface Context { pluginId?: string; contentScriptId?: string }
 const specialLanguages = new Set(['mermaid', 'math', 'katex', 'abc', 'plantuml', 'drawio', 'graphviz', 'dot', 'nomnoml', 'markmap']);
@@ -19,6 +30,12 @@ const labels: Record<string, string> = {
   postgresql: 'PostgreSQL', postgres: 'PostgreSQL', pgsql: 'PostgreSQL', mysql: 'MySQL', mariadb: 'MariaDB',
   sqlite: 'SQLite', tsql: 'T-SQL', transactsql: 'T-SQL', bigquery: 'BigQuery',
   vue: 'Vue', angular: 'Angular', shellscript: 'Shell', svg: 'SVG', xhtml: 'XHTML', less: 'Less',
+  pwsh: 'PowerShell', ps: 'PowerShell', lua: 'Lua', dart: 'Dart', rust: 'Rust', rs: 'Rust', dockerfile: 'Dockerfile',
+  terraform: 'Terraform', tf: 'Terraform', opentofu: 'OpenTofu', hcl: 'HCL',
+  plsql: 'Oracle PL/SQL', oracle: 'Oracle PL/SQL', snowflake: 'Snowflake', duckdb: 'DuckDB', redshift: 'Redshift', db2: 'DB2', hive: 'Hive',
+  basic: 'BASIC', 'bbc-basic': 'BBC BASIC', bbcbasic: 'BBC BASIC', 'sinclair-basic': 'Sinclair BASIC',
+  'commodore-basic': 'Commodore BASIC V2', 'c64-basic': 'Commodore BASIC V2', 'locomotive-basic': 'Locomotive BASIC',
+  applesoft: 'Applesoft BASIC', gwbasic: 'GW-BASIC', qbasic: 'QBasic', 'atari-basic': 'Atari BASIC', amos: 'AMOS BASIC',
 };
 const aliases: Record<string, string> = {
   zsh: 'bash', jsonc: 'json', json5: 'json', tsx: 'typescript', ps1: 'powershell',
@@ -26,6 +43,10 @@ const aliases: Record<string, string> = {
   objectivec: 'objectivec', 'objective-c': 'objectivec', gql: 'graphql', proto: 'protobuf',
   postgresql: 'sql', postgres: 'sql', pgsql: 'sql', mysql: 'sql', mariadb: 'sql',
   sqlite: 'sql', tsql: 'sql', transactsql: 'sql', bigquery: 'sql', vue: 'xml', angular: 'xml', svg: 'xml', xhtml: 'xml',
+  pwsh: 'powershell', ps: 'powershell', rs: 'rust',
+  plsql: 'sql', oracle: 'sql', snowflake: 'sql', duckdb: 'sql', redshift: 'sql', db2: 'sql', hive: 'sql',
+  'bbc-basic': 'basic', bbcbasic: 'basic', 'sinclair-basic': 'basic', 'commodore-basic': 'basic', 'c64-basic': 'basic',
+  'locomotive-basic': 'basic', applesoft: 'basic', gwbasic: 'basic', qbasic: 'basic', 'atari-basic': 'basic', amos: 'basic',
 };
 
 export function escapeHtml(value: string): string {

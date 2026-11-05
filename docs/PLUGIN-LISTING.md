@@ -14,7 +14,7 @@ Copy the original code without line numbers or other decoration. Wrap a long lin
 
 The comparison panes scroll together and keep matching code aligned when formatting inserts extra lines. Precise highlights show edited text, including spaces, tabs and line breaks. Apply updates the chosen code block; Copy original and Copy formatted leave the note unchanged. Normal editor Undo can restore an applied change.
 
-Formatting is available for explicitly labelled Python, Bash/POSIX shell, JavaScript, TypeScript, SQL dialects, Go, C-family languages, web templates/styles and several data formats. Syntax highlighting supports more languages than formatting; unsupported formatters are not offered.
+Formatting is available for explicitly labelled Python, Bash/POSIX shell, JavaScript, TypeScript, SQL dialects, Go, C-family languages, Lua, Dart, Rust, PowerShell 7, Dockerfile, Terraform/HCL, retro BASIC listings, web templates/styles and several data formats. Syntax highlighting supports more languages than formatting; unsupported formatters are not offered.
 
 The cards work in Joplin Desktop's Rich Text editor and Markdown preview. Notes remain ordinary Markdown, and the Markdown source editor remains a source view.
 
@@ -26,7 +26,7 @@ All formatters, highlighting code and fonts are bundled. Processing stays on the
 2. Read the styled card in Rich Text or Markdown preview, then choose Copy, Wrap or Format.
 3. Review the linked comparison and decide whether to apply the result, copy it or cancel.
 
-Highlighting uses Highlight.js. Bundled formatters include Ruff, shfmt, gofmt, clang-format, Prettier and SQL Formatter. The comparison uses whitespace-aware alignment and jsdiff; its visual markers are excluded from copied and applied code. No formatter sends code to a remote service.
+Highlighting uses Highlight.js. Bundled formatters include Ruff, shfmt, gofmt, clang-format, Prettier, StyLua, dart_style, rustfmt, dprint and SQL Formatter, plus conservative retro BASIC layout formatting. The comparison uses whitespace-aware alignment and jsdiff; its visual markers are excluded from copied and applied code. No formatter sends code to a remote service.
 
 ## Credits
 

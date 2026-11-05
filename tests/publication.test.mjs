@@ -19,6 +19,12 @@ test('catalogue metadata matches the installer and the package contains only int
   assert.match(credits, /Concept and design: Leonard Powers/);
   assert.match(credits, /Coding and implementation: Ada \(OpenAI Codex\)/);
   assert.match(execFileSync('tar', ['-xOf', installer, 'LICENSE'], { encoding: 'utf8' }), /Copyright \(c\) 2026 Leonard Powers/);
+  const installerFiles = execFileSync('tar', ['-tf', installer], { encoding: 'utf8' }).split('\n');
+  for (const name of ['lua_fmt_bg.wasm', 'dart_fmt.wasm', 'rust_fmt.wasm', 'dockerfile.wasm', 'terraform.wasm',
+    'vendor-licenses/SOURCE-NOTICES.txt', 'vendor-licenses/STYLUA-MPL-2.0.txt', 'vendor-licenses/rust/NOTICE.md',
+    'vendor-licenses/FOLDHASH-LICENSE.txt', 'vendor-licenses/UNICODE-IDENT-LICENSE-UNICODE.txt']) assert.ok(installerFiles.includes(name), name);
+  const notices = execFileSync('tar', ['-xOf', installer, 'BUNDLED-DEPENDENCY-LICENSES.txt'], { encoding: 'utf8' });
+  for (const name of ['@dprint/terraform', '@dprint/dockerfile', '@wasm-fmt/lua_fmt', '@wasm-fmt/dart_fmt', '@scalar/rust-fmt', 'prettier-plugin-powershell']) assert.ok(notices.includes(name), name);
   const packed = JSON.parse(execFileSync('npm', ['pack', '--dry-run', '--json', '--ignore-scripts'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }))[0];
   const files = packed.files.map(file => file.path);
   assert.ok(pkg.name.startsWith('joplin-plugin-'));

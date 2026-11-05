@@ -46,6 +46,28 @@ LIMIT 10;
 printf '%s\\n' "Hello from Code Block Studio"
 \`\`\`
 
+## PowerShell · preview before applying
+
+Formatting targets PowerShell 7 and preserves aliases, cmdlets and literal text.
+
+\`\`\`powershell title="hello.ps1"
+function Get-Greeting{
+param([string]$Name)
+Write-Output "Hello, $Name"
+}
+\`\`\`
+
+## Retro BASIC · keep the program numbers
+
+Formatting aligns the original line numbers and indents the loop. It keeps the statements, their case and the quoted text intact.
+
+\`\`\`commodore-basic title="hello.bas"
+10 FOR I=1 TO 3
+20 PRINT "HELLO";I
+30 NEXT I
+100 END
+\`\`\`
+
 Short inline snippets like \`const answer = 42\` get the same code font.
 
 ### Make your own

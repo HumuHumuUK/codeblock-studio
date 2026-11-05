@@ -4,7 +4,7 @@ Read, compare and tidy code in your notes.
 
 Code Block Studio turns fenced code blocks in Joplin Desktop into readable dark cards, with syntax highlighting, line numbers, optional filenames and the bundled JetBrains Mono font. Format, Wrap and Copy stay within reach as you scroll through long snippets.
 
-Preview formatting for Python, Bash, JavaScript, TypeScript, SQL, Go, C/C++ and other supported languages before changing a note. The Original and Formatted panes scroll together, keep matching code aligned, and show the spaces, tabs and line breaks that changed. Apply the result to one code block, copy it instead, or cancel. Normal editor Undo restores an applied change.
+Preview formatting for Python, Bash, PowerShell, JavaScript, TypeScript, SQL, Go, C/C++, Lua, Dart, Rust, infrastructure configuration and retro BASIC listings before changing a note. The Original and Formatted panes scroll together, keep matching code aligned, and show the spaces, tabs and line breaks that changed. Apply the result to one code block, copy it instead, or cancel. Normal editor Undo restores an applied change.
 
 All highlighting and formatting run locally. There are no accounts, AI services, analytics or runtime downloads, and snippets are never executed.
 
@@ -55,16 +55,58 @@ Formatting is available for explicitly labelled code blocks:
 | Python | `python`, `py` |
 | Bash and POSIX shell | `bash`, `sh`, `shell`, `shellscript` |
 | Go | `go`, `golang` |
+| PowerShell 7 | `powershell`, `ps1`, `pwsh`, `ps` |
+| Lua | `lua` |
+| Dart | `dart` |
+| Rust (2021 edition) | `rust`, `rs` |
+| Dockerfile | `dockerfile` |
+| Terraform / OpenTofu and HCL | `terraform`, `tf`, `opentofu`, `hcl` |
 | C, C++, C#, Java, Objective-C, Protocol Buffers | `c`, `cpp` / `c++`, `csharp` / `cs` / `c#`, `java`, `objc`, `proto` / `protobuf` |
 | SQL dialects | `sql`, `postgresql` / `postgres` / `pgsql`, `mysql`, `mariadb`, `sqlite`, `tsql`, `bigquery` |
+| Additional SQL dialects | `plsql` / `oracle`, `snowflake`, `duckdb`, `redshift`, `db2`, `hive` |
 | JavaScript and TypeScript | `javascript` / `js`, `jsx`, `typescript` / `ts`, `tsx` |
 | Web templates and styles | `html`, `vue`, `angular`, `css`, `scss`, `less` |
 | Data and configuration | `json`, `jsonc`, `json5`, `yaml` / `yml`, `xml`, `svg`, `toml` |
 | Other | `php`, `graphql` / `gql`, `markdown` / `md` |
+| Generic numbered BASIC | `basic` |
+| BBC Micro / Master | `bbc-basic`, `bbcbasic` |
+| ZX Spectrum | `sinclair-basic` |
+| Commodore 64 / VIC-20 | `commodore-basic`, `c64-basic` |
+| Amstrad CPC | `locomotive-basic` |
+| Apple II | `applesoft` |
+| DOS BASIC | `gwbasic`, `qbasic` |
+| Atari 8-bit / Amiga | `atari-basic`, `amos` |
 
-Use `bash` for Bash-specific scripts and `sh` for POSIX shell scripts. Languages without a bundled formatter, including PowerShell, Rust, Fish and Zsh, retain highlighting and copying; their Format button is omitted. Guessed languages also omit Format, so add an explicit fence label to enable it.
+Use `bash` for Bash-specific scripts and `sh` for POSIX shell scripts. Languages without a bundled formatter, including Fish and Zsh, retain highlighting and copying; their Format button is omitted. Guessed languages also omit Format, so add an explicit fence label to enable it.
 
-All formatters are bundled and run locally when requested. Python uses Ruff with four-space indentation and preserved quote style; shell uses shfmt with two spaces; Go uses gofmt's standard style. C-family code uses clang-format (Microsoft style for C#, LLVM style with two spaces for the others). SQL uses uppercase keywords and two-space indentation. Prettier handles the remaining languages, generally using two spaces and a preferred width of 100 columns. XML preserves whitespace-sensitive mixed content. Code uses LF line endings after formatting.
+The [example note](examples/code-block-studio.md) contains a ready-to-format block for every new language and BASIC dialect. Import or paste it into Joplin to try the previews.
+
+### Practical languages
+
+PowerShell formatting targets PowerShell 7, including its multiline pipeline syntax. Compatibility of the formatted result with Windows PowerShell 5.1 is not guaranteed. Aliases, cmdlets, keyword casing and hashtable order are preserved; an additional token/literal check rejects changes to code or literal text, including attempts to repair missing braces. Explicit separators may replace existing line breaks between hashtable entries. It is not a complete PowerShell syntax validator.
+
+Lua uses StyLua with two spaces; Dart uses dart_style; Rust uses rustfmt with Rust 2021 syntax and style. Rust import/module reordering is disabled. Dockerfile instructions use dprint's formatter; commands and heredoc bodies are never executed. Terraform/OpenTofu and HCL use the HCL/OpenTofu formatter without requiring Terraform or OpenTofu to be installed.
+
+### Retro BASIC listings
+
+Retro formatting aligns existing program line numbers and indents recognised loops and structured blocks with two spaces. For example:
+
+````markdown
+```commodore-basic
+10 FOR I=1 TO 3
+20 PRINT "HELLO";I
+30 NEXT I
+100 END
+```
+````
+
+The preview aligns `10`, `20` and `30` with `100`, and indents the `PRINT` line inside the loop. Those are actual BASIC program numbers; the card's gutter numbers remain separate.
+
+The formatter preserves statement text, variable/keyword case, strings, `REM` comments, `DATA` payloads and physical statement boundaries. It never renumbers a program, expands abbreviated keywords, splits colon-separated statements or joins lines. BASIC line endings become LF; the final-newline state is preserved. Deep indentation is capped at 20 levels.
+
+This is conservative layout formatting for text listings, not a BASIC interpreter or complete syntax validator. Compact/tokenised keyword forms and unfamiliar constructs are retained rather than expanded; loop/block indentation depends on recognised, separated control words. Syntax colouring uses the generic BASIC grammar, so machine-specific commands may have plain colouring. Tokenised tape/disk images must first be exported as text.
+
+All formatters are bundled and run locally when requested. Python uses Ruff with four-space indentation and preserved quote style; shell uses shfmt with two spaces; Go uses gofmt's standard style. C-family code uses clang-format (Microsoft style for C#, LLVM style with two spaces for the others). SQL uses uppercase keywords and two-space indentation. Prettier handles the remaining languages, generally using two spaces and a preferred width of 100 columns. XML preserves whitespace-sensitive mixed content. Most formatters use LF line endings; Terraform/HCL preserves the source line endings.
 
 Formatting changes layout, not program execution: snippets are never run, shell simplification is disabled, and Python docstring examples are left alone. A parsing failure displays an error without changing the code; formatters do not replace a compiler or validate every language error. Clicking Format on already-formatted code shows “Already formatted” directly below the toolbar buttons. Formatting feedback stays with the sticky toolbar as you scroll, and Format remains available. No system Python, shell formatter, Go compiler or C compiler installation is required.
 
@@ -147,5 +189,6 @@ Original plugin implementation: MIT, see `LICENSE`. Bundled dependency notices a
 - [SQL Formatter](https://github.com/sql-formatter-org/sql-formatter), [Prettier XML](https://github.com/prettier/plugin-xml), [Prettier TOML](https://github.com/un-ts/toml-tools/tree/master/packages/prettier-plugin-toml) and [Prettier PHP](https://github.com/prettier/plugin-php) — bundled dependency licences
 - [jsdiff](https://github.com/kpdecker/jsdiff) — local comparison of code lines and characters, BSD-3-Clause
 - [Markdown-it](https://github.com/markdown-it/markdown-it) — MIT, used to locate the chosen block in the current Markdown editor document
+- [StyLua WASM](https://github.com/wasm-fmt/lua_fmt), [Dart formatter WASM](https://github.com/wasm-fmt/dart_fmt), [Scalar rustfmt WASM](https://github.com/scalar/formatters), [dprint Dockerfile](https://github.com/dprint/dprint-plugin-dockerfile), [dprint Terraform/HCL](https://github.com/dprint/dprint-plugin-terraform) and [Prettier PowerShell](https://github.com/Nick2bad4u/Prettier-Plugin-Powershell) — bundled wrapper and upstream notices; see `vendor-licenses/SOURCE-NOTICES.txt` for source locations and licence details
 
 This is an independent plugin, not a fork of CodePerfect. Its source was consulted as a comparison, alongside the official Joplin API.

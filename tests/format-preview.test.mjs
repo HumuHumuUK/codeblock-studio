@@ -183,7 +183,7 @@ test('the real plugin keeps Copy and Apply tied to source text and packages the 
     workspace: { selectedNote: async () => ({ id: 'same-note' }) },
     clipboard: { writeText: async text => copies.push(text) },
   };
-  vm.runInNewContext(await readText('dist/index.js', 'utf8'), { joplin, require, console, Buffer, TextEncoder, TextDecoder, URL, process, setTimeout, clearTimeout });
+  vm.runInNewContext(await readText('dist/index.js', 'utf8'), { joplin, require, console, Buffer, TextEncoder, TextDecoder, URL, process, performance, crypto: globalThis.crypto, setTimeout, clearTimeout });
   await startup();
   assert.ok(scripts.includes('./formatDialog.js'));
   const message = { action: 'format', text: 'const a={x:1};\n', language: 'js', info: 'js', fenceIndex: 0 };
@@ -204,6 +204,25 @@ test('the real plugin keeps Copy and Apply tied to source text and packages the 
   assert.doesNotMatch(rich.rowsHtml, /cs-diff/);
   assert.equal((await onMessage(message)).action, 'applied');
   assert.equal(applies[0][1].args[1], copies[1]);
+  for (const [language, text] of [
+    ['powershell', '$n=1\nWrite-Output $n\n'],
+    ['rust', 'fn main(){println!("hello");}\n'],
+    ['terraform', 'locals {\nname="example"\n}\n'],
+    ['commodore-basic', '10 FOR I=1 TO 3\n20 PRINT I\n30 NEXT I\n100 END\n'],
+  ]) {
+    const request = { ...message, text, language, info: language };
+    choice = 'copyFormatted';
+    await onMessage(request);
+    const formatted = copies.at(-1);
+    assert.notEqual(formatted, text, language);
+    choice = 'ok';
+    const response = await onMessage({ ...request, editor: 'rich' });
+    assert.equal(response.action, 'apply', language);
+    assert.equal(response.formatted, formatted, language);
+    assert.doesNotMatch(response.rowsHtml, /cs-diff/, language);
+    assert.equal((await onMessage(request)).action, 'applied', language);
+    assert.equal(applies.at(-1)[1].args[1], formatted, language);
+  }
   const installer = 'publish/local.lpowers.code-studio.jpl';
   const entries = execFileSync('tar', ['-tf', installer], { encoding: 'utf8' }).split('\n');
   assert.ok(entries.includes('formatDialog.js'));

@@ -11,6 +11,7 @@
 | `src/replaceFence.ts` | Locates and validates the selected fence against the current document before replacing its code. |
 | `src/formatLanguages.ts` | Maps explicit language labels and aliases to formatter engines. |
 | `src/formatCode.ts` | Runs bundled formatters and loads their packaged WASM assets. |
+| `src/formatBasic.ts` | Preserves retro BASIC statements while aligning line numbers and indenting recognised blocks. |
 | `src/code-studio.css` | Dark cards, font, line numbers, wrapping, sticky toolbar and print styling. |
 | `src/formatPreview.ts` | Builds the escaped, aligned Original/Formatted comparison and change highlights. |
 | `src/formatDialog.ts` | Links vertical scrolling in both preview panes, including after reopening the dialog. |
@@ -50,5 +51,13 @@ Toolbar clicks are handled during document capture, before the editor's block-se
 - gofmt WASM: standard Go formatting.
 - clang-format WASM: C-family languages and Protocol Buffers.
 - SQL Formatter: the supported SQL dialects.
+- StyLua WASM: Lua, two-space indentation and no require sorting.
+- Dart WASM: dart_style; version 0.3.0 is pinned because 0.4.0 failed a basic valid-input probe.
+- Scalar rustfmt WASM: Rust 2021, with import and module reordering disabled. The browser entry accepts explicit packaged bytes; its compressed artifact is expanded at build time, so runtime decompression/downloads are unnecessary. WASI exposes only an in-memory work directory.
+- dprint WASM: Dockerfile and Terraform/OpenTofu/HCL, initialised from packaged bytes with no external processes.
+- Prettier PowerShell: PowerShell 7 layout, with token/literal preservation checked before returning output. It retains aliases, cmdlets, hashtable order and keyword case; it rejects synthesised delimiters rather than repairing malformed code.
+- Local BASIC layout formatter: generic BASIC, BBC, Sinclair, Commodore V2, Locomotive, Applesoft, GW-BASIC, QBasic, Atari BASIC and AMOS. It changes only leading layout whitespace and normalises line endings. It does not parse/execute programs or change statement boundaries, casing, data or program numbers. Indentation is bounded and overlarge output is rejected.
+
+Formatter initialisation promises are cached per asset, so concurrent first requests share a load. Failed initialisation is removed from the cache for retry. HCL has a local Highlight.js grammar, including heredocs; BASIC dialect labels use generic BASIC syntax colouring.
 
 See the README for labels and aliases. None of these engines executes code, and no formatter makes network requests. Syntax rejection varies by formatter; this feature is not a compiler or semantic validator.

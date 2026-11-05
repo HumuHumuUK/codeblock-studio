@@ -2,7 +2,7 @@
   "manifest_version": 1,
   "id": "local.lpowers.code-studio",
   "app_min_version": "3.3",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "name": "Code Block Studio",
   "description": "Readable code blocks with syntax highlighting, sticky Copy controls and offline formatting previews with aligned scrolling and visible changes.",
   "author": "Leonard Powers",
