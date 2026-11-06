@@ -1,6 +1,6 @@
 # Code Block Studio for Joplin
 
-Read, compare and tidy code in your notes. (c)
+Read, compare and tidy code in your notes.
 
 Code Block Studio turns fenced code blocks in Joplin Desktop into readable dark cards, with syntax highlighting, line numbers, optional filenames and the bundled JetBrains Mono font. Format, Wrap and Copy stay within reach as you scroll through long snippets.
 
