@@ -1,10 +1,10 @@
 {
   "manifest_version": 1,
   "id": "local.lpowers.code-studio",
-  "app_min_version": "3.3",
-  "version": "1.7.4",
+  "app_min_version": "3.7.22",
+  "version": "1.7.5",
   "name": "Code Block Studio",
-  "description": "Readable code blocks with syntax highlighting, sticky Copy controls and offline formatting previews with aligned scrolling and visible changes.",
+  "description": "Readable code blocks, offline formatting previews and retro computer displays for Joplin Desktop.",
   "author": "Leonard Powers",
   "homepage_url": "https://github.com/HumuHumuUK/codeblock-studio",
   "repository_url": "https://github.com/HumuHumuUK/codeblock-studio",
@@ -29,15 +29,27 @@
   "screenshots": [
     {
       "src": "docs/images/code-cards.png",
-      "label": "Python and SQL code cards with syntax highlighting, line numbers, filename labels and Format, Wrap and Copy controls."
+      "label": "Python, SQL and Bash code cards with syntax highlighting, line numbers and Format, Wrap and Copy controls."
     },
     {
       "src": "docs/images/format-comparison.png",
-      "label": "Original and formatted Python aligned side by side, with changed spaces, line breaks and synchronised scrolling."
+      "label": "Original and formatted Python aligned side by side, with highlighted whitespace changes and linked scrolling."
+    },
+    {
+      "src": "docs/images/retro-displays.png",
+      "label": "Commodore 64, BBC Micro, ZX Spectrum and Amstrad CPC code blocks with saved retro displays."
+    },
+    {
+      "src": "docs/images/bbc-modes.png",
+      "label": "BBC Micro bitmap and teletext presets, including blue and red Mode 6 displays with black row gaps."
+    },
+    {
+      "src": "docs/images/language-picker.png",
+      "label": "Search the Rich Text language dropdown by language, alias or retro computer name."
     },
     {
       "src": "docs/images/wrapped-code.png",
-      "label": "A long line wrapped within a code card while retaining its original line number."
+      "label": "A long JavaScript code line wrapped inside its card while retaining the original line number."
     }
   ],
   "icons": {

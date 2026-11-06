@@ -1,12 +1,18 @@
 # Code Block Studio for Joplin
 
-Read, compare and tidy code in your notes.
+**Read, format and enjoy code in your Joplin notes.**
 
-Code Block Studio turns fenced code blocks in Joplin Desktop into readable dark cards, with syntax highlighting, line numbers, optional filenames and the bundled JetBrains Mono font. Format, Wrap and Copy stay within reach as you scroll through long snippets.
+Code Block Studio makes code easier to read with syntax highlighting, line numbers, optional filenames and a clear, consistent font. Copy, Wrap and Format stay within reach as you scroll.
 
-Preview formatting for Python, Bash, PowerShell, JavaScript, TypeScript, SQL, Go, C/C++, Lua, Dart, Rust, infrastructure configuration and retro BASIC listings before changing a note. The Original and Formatted panes scroll together, keep matching code aligned, and show the spaces, tabs and line breaks that changed. Apply the result to one code block, copy it instead, or cancel. Normal editor Undo restores an applied change.
+- **Format with confidence.** Compare the original and formatted code side by side before applying changes to one block. Linked scrolling and visible whitespace changes help you review the result. Normal editor Undo restores an applied change.
+- **Find your language quickly.** Type to complete a language name, or open the searchable dropdown to browse languages, aliases and retro computers. Custom labels still work.
+- **Work with everyday languages.** Format Python, JavaScript, TypeScript, Bash, PowerShell, SQL, Go, C/C++, Lua, Dart, Rust, web templates, configuration files and supported BASIC dialects. Highlighting covers additional languages.
+- **Bring back the classics.** Tick Retro display for original-style fonts and familiar screen colours from Commodore 64, BBC Micro, ZX Spectrum, Amstrad CPC, Apple II, IBM PC, Atari, Amiga, Macintosh, MSX, ZX81, Dragon, Archimedes and Oric Atmos. BBC presets include Modes 0–7 and the distinctive blue/red Mode 6 displays. The choice is saved with each block and follows it into the formatting comparison.
+- **Keep code on your computer.** Fonts, highlighting and formatters are bundled locally. No accounts, AI services, analytics or runtime downloads are required. Code snippets are never executed.
 
-All highlighting and formatting run locally. There are no accounts, AI services, analytics or runtime downloads, and snippets are never executed.
+Works in Joplin Desktop's Rich Text editor and Markdown preview. Notes remain ordinary Markdown, and copied code excludes line numbers and display decoration.
+
+Try the downloadable **77-example Markdown note**, with main programming languages first and retro systems towards the end. Start with the [examples and installer on GitHub](https://github.com/HumuHumuUK/codeblock-studio/releases/tag/v1.7.5).
 
 **Concept and design: Leonard Powers.** **Coding and implementation: Ada (OpenAI Codex), under Leonard Powers' direction.** See [credits](CREDITS.md).
 
@@ -165,9 +171,9 @@ Code Block Studio is independent of the Joplin theme, so the cards stay dark in 
 
 ## Install or remove
 
-Requires Joplin Desktop; the declared minimum is 3.3. Earlier versions were checked on Joplin Desktop 3.7.22 for Linux. Final live acceptance of the current candidate, and verification of the minimum version, remain pending. Windows, macOS and mobile have not been live-tested; mobile is not declared as supported.
+Requires **Joplin Desktop 3.7.22 or later**, matching the version used for Linux development checks. Windows and macOS have not been live-tested. Mobile is not supported. Retro displays are static reproductions; they do not emulate or execute a computer program.
 
-Version **1.7.4** is available as a [public preview](https://github.com/HumuHumuUK/codeblock-studio/releases/tag/v1.7.4) and is not yet listed in the official plugin catalogue. Download the [Joplin installer](https://github.com/HumuHumuUK/codeblock-studio/releases/download/v1.7.4/local.lpowers.code-studio.jpl), then install it manually:
+The [1.7.5 release](https://github.com/HumuHumuUK/codeblock-studio/releases/tag/v1.7.5) provides the installer and example note. Search for **Code Block Studio** in Joplin's Plugins settings once the catalogue import has completed, or download the [Joplin installer](https://github.com/HumuHumuUK/codeblock-studio/releases/download/v1.7.5/local.lpowers.code-studio.jpl) and install it manually:
 
 1. Open **Tools → Options → Plugins**.
 2. Choose the gear menu → **Install from file** and select `local.lpowers.code-studio.jpl`.
@@ -175,7 +181,7 @@ Version **1.7.4** is available as a [public preview](https://github.com/HumuHumu
 
 Download the actual `.jpl` installer file, rather than saving a repository's file-view web page. A fresh local build is available under `publish/`.
 
-Download the [77-example Markdown note](https://github.com/HumuHumuUK/codeblock-studio/releases/download/v1.7.4/code-block-studio-examples.md), also supplied by local builds as `publish/code-block-studio-examples.md`. Import it into Joplin as a Markdown file to try all 16 retro screen families, BBC mode presets and examples for every supported formatter language/dialect. The retro displays start enabled; untick them to compare with normal highlighting. No sample code is executed.
+Download the [77-example Markdown note](https://github.com/HumuHumuUK/codeblock-studio/releases/download/v1.7.5/code-block-studio-examples.md), also supplied by local builds as `publish/code-block-studio-examples.md`. Import it into Joplin as a Markdown file to try all 16 retro screen families, BBC mode presets and examples for every supported formatter language/dialect. The retro displays start enabled; untick them to compare with normal highlighting. No sample code is executed.
 
 Disable overlapping code-block appearance plugins if they interfere with the cards.
 

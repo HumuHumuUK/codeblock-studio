@@ -7,6 +7,9 @@ import { execFileSync } from 'node:child_process';
 test('catalogue metadata matches the installer and the package contains only intended public files', async () => {
   const pkg = JSON.parse(await readFile('package.json', 'utf8'));
   const manifest = JSON.parse(await readFile('src/manifest.json', 'utf8'));
+  const lock = JSON.parse(await readFile('package-lock.json', 'utf8'));
+  assert.equal(lock.version, pkg.version);
+  assert.equal(lock.packages[''].version, pkg.version);
   const info = JSON.parse(await readFile(`publish/${manifest.id}.json`, 'utf8'));
   const installer = `publish/${manifest.id}.jpl`;
   const hash = createHash('sha256').update(await readFile(installer)).digest('hex');
@@ -16,6 +19,7 @@ test('catalogue metadata matches the installer and the package contains only int
   assert.equal(info.version, pkg.version);
   const { _publish_hash, _publish_commit, ...metadata } = info;
   assert.deepEqual(metadata, manifest);
+  assert.deepEqual(JSON.parse(execFileSync('tar', ['-xOf', installer, 'manifest.json'], { encoding: 'utf8' })), manifest);
   const credits = execFileSync('tar', ['-xOf', installer, 'CREDITS.md'], { encoding: 'utf8' });
   assert.match(credits, /Concept and design: Leonard Powers/);
   assert.match(credits, /Coding and implementation: Ada \(OpenAI Codex\)/);

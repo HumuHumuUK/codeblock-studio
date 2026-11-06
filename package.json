@@ -1,8 +1,7 @@
 {
   "name": "joplin-plugin-code-block-studio",
-  "version": "1.7.4",
-  "private": true,
-  "description": "Readable code blocks with syntax highlighting, sticky Copy controls and offline formatting previews with aligned scrolling and visible changes.",
+  "version": "1.7.5",
+  "description": "Readable code blocks, offline formatting previews and retro computer displays for Joplin Desktop.",
   "author": "Leonard Powers",
   "contributors": [
     {
