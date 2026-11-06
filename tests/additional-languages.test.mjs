@@ -13,7 +13,7 @@ setFormatterAssetLoader(name => {
   loads.set(name, (loads.get(name) || 0) + 1);
   return readFileSync(new URL(`../dist/${name}`, import.meta.url));
 });
-const retro = ['basic', 'bbc-basic', 'sinclair-basic', 'commodore-basic', 'locomotive-basic', 'applesoft', 'gwbasic', 'qbasic', 'atari-basic', 'amos'];
+const retro = ['basic', 'bbc-basic', 'sinclair-basic', 'commodore-basic', 'locomotive-basic', 'applesoft', 'gwbasic', 'qbasic', 'atari-basic', 'amos', 'mac-basic', 'mac-quickbasic', 'stos', 'gfa-basic', 'msx-basic', 'zx81-basic', 'dragon-basic', 'archimedes-basic', 'oric-basic'];
 const statements = code => code.split('\n').map(line => line.replace(/^[ \t]*(\d+)[ \t]*/, '$1:').replace(/^[ \t]+/, ''));
 
 test('new engines load only packaged assets, including concurrent first use', async () => {
@@ -61,6 +61,14 @@ test('BASIC indentation recognises loop boundaries without changing inline state
   assert.equal(await formatCode('10 IF ready THEN REM FOR I=1 TO 3:NEXT:FOR J=1 TO 9\n20 PRINT "outside"\n', 'commodore-basic'), '10 IF ready THEN REM FOR I=1 TO 3:NEXT:FOR J=1 TO 9\n20 PRINT "outside"\n');
   const bbc = '10 REPEAT\n20 CamelCase%=CamelCase%+1\n30 UNTIL CamelCase%=3\n';
   assert.equal(await formatCode(bbc, 'bbc-basic'), '10 REPEAT\n20   CamelCase%=CamelCase%+1\n30 UNTIL CamelCase%=3\n');
+  assert.equal(await formatCode(bbc, 'archimedes-basic'), '10 REPEAT\n20   CamelCase%=CamelCase%+1\n30 UNTIL CamelCase%=3\n');
+  for (const language of ['stos', 'gfa-basic']) {
+    assert.equal(await formatCode('REPEAT\nPRINT "UNTIL: NEXT"\nUNTIL X=1\n', language), 'REPEAT\n  PRINT "UNTIL: NEXT"\nUNTIL X=1\n');
+  }
+  assert.equal(await formatCode('IF x\nPRINT "Yes"\nENDIF\n', 'gfa-basic'), 'IF x\n  PRINT "Yes"\nENDIF\n');
+  for (const language of ['msx-basic', 'mac-basic', 'mac-quickbasic']) {
+    assert.equal(await formatCode("WHILE x\nPRINT \"WEND\" ' NEXT\nWEND\n", language), "WHILE x\n  PRINT \"WEND\" ' NEXT\nWEND\n");
+  }
 });
 
 test('BASIC handles large blank listings and bounds generated output', async () => {

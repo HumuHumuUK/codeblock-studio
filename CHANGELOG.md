@@ -1,5 +1,51 @@
 # Change history
 
+## Unreleased
+
+- Added a manual public-source preparation command that exports committed development files into a fresh public checkout for review, preserving separate histories and leaving publication manual.
+- Included an importable Markdown test note beside the installer and in its checksums, with all retro screen families enabled and examples for every supported formatter language/dialect.
+- Reorganised the 77-example note with main programming languages first, then web, data/configuration and SQL, followed by the retro computers and BBC display modes. Added readable headings, section links and updated test instructions.
+
+## 1.7.4 — 6 November 2026 (local candidate)
+
+- Removed the extra blank top row and leading black rule from the BBC Mode 6 blue/red screens. Black gaps now span the full width, with eight parts coloured paper to two parts black gap, in code cards and both formatting comparison panes.
+
+## 1.7.3 — 6 November 2026 (local candidate)
+
+- Fixed Retro display using stale settings after saving a language change in the Rich Text code editor. Toggling now reads the current source language and fence settings, so it cannot restore the previous language or act on an outdated tick state.
+- Refresh the outer screen style after Joplin updates a block. Format also reads the current source settings, keeping its comparison in the correct language and retro display.
+
+## 1.7.2 — 6 November 2026 (local candidate)
+
+- Removed repeated language choices caused by showing aliases as separate rows. The catalogue now has 240 named choices covering the same 440 accepted language spellings; Python/py, JavaScript/js and the retro short names remain searchable in one row per language.
+- Consolidated Commodore 64 and Dragon 32/64 synonym rows. Kept distinct formats/dialects such as JSON/JSONC/JSON5, JSX/TSX, HTML/XML/XHTML/SVG, Bash/POSIX/Zsh, shell sessions and BASIC versions separately labelled.
+- Preserved direct typed aliases, closed-field completion, custom labels and the existing dropdown keyboard behaviour. Choosing a row uses its primary language label; existing note fences are not rewritten by the catalogue cleanup.
+
+## 1.7.1 — 6 November 2026 (local candidate)
+
+- Kept the language dropdown closed when opening the code editor or focusing the Language field. Click the arrow to browse, with arrow-key access retained.
+- Added completion inside the closed field while typing language prefixes. Suggested endings are selected; Enter accepts, Escape restores the typed prefix, and Backspace/Delete remain usable. Custom labels and filtering an explicitly opened list remain supported.
+
+## 1.7.0 — 6 November 2026 (local candidate)
+
+- Made the Language field in Joplin’s Rich Text code-block editing window a searchable dropdown, with suggestions from the bundled highlighting and formatter languages, aliases and retro computer names. Custom typed labels remain supported.
+- Added mouse selection, arrow-key navigation, Enter to accept a suggestion and Escape to dismiss it. Joplin retains its existing code field, OK/Cancel controls and save path; Markdown typing is unchanged.
+- Generated the suggestion catalogue at build time from the renderer’s existing language data, keeping it local without adding a runtime dependency. Disabled/read-only fields, unrelated dialogs and existing language pickers are left alone.
+
+## 1.6.0 — 6 November 2026 (local candidate)
+
+- Added Macintosh Microsoft BASIC/QuickBASIC, Atari ST STOS/GFA, MSX, ZX81, Dragon 32/64, Archimedes BBC BASIC V/VI and Oric Atmos labels, local fonts and documented screen palettes. Macintosh uses Monaco for code and Chicago for its caption; Dragon retains inverse-uppercase lowercase rendering.
+- Added saved BBC mode presets for Modes 0–7, with narrow/wide bitmap proportions and blue/red Mode 6 screens with black inter-row gaps. Mode 7 remains the default for existing blocks. Unticking Retro display retains the selected mode; native Undo restores changes.
+- Both formatting comparison panes use the selected BBC mode. Added samples for every new dialect/system and BBC preset to the importable Markdown note.
+- Retained original font downloads and licences alongside five clearly named CC BY-SA geometry/spacing variants; missing Oric glyphs fall back visibly instead of disappearing. No system fonts or runtime downloads are needed.
+
+## 1.5.0 — 6 November 2026 (local candidate)
+
+- Added a Retro display checkbox to machine-specific BASIC code blocks, saving the choice with each block and retaining native editor Undo. Unticking restores ordinary highlighting without changing the code.
+- Bundled unchanged fonts for C64, BBC Micro Mode 7, ZX Spectrum, Amstrad CPC, Apple II, IBM VGA, Atari 8-bit and Amiga Topaz, with familiar screen colours and a C64 border. Fonts, upstream attribution and licences remain available offline.
+- Both formatting comparison panes follow the selected retro screen while retaining change marks and linked scrolling. Copy and Apply continue to use raw code.
+- Added short fence aliases including `c64`, `bbc`, `spectrum` and `amstrad`, plus checks for saved flags, quoted filenames, exact metadata-only edits, read-only notes, font loading, palettes and Undo/Redo.
+
 ## 1.4.0 — 5 November 2026 (publication candidate)
 
 - Added offline formatting for PowerShell 7, Lua, Dart, Rust 2021, Dockerfile and Terraform/OpenTofu/HCL, plus Oracle PL/SQL, Snowflake, DuckDB, Redshift, DB2 and Hive SQL dialects.

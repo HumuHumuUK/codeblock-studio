@@ -63,7 +63,7 @@
   font-family: "Code Block Studio Mono", "JetBrains Mono", Consolas, monospace;
   font-size: 11px;
 }
-.cs-card .cs-actions { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+.cs-card .cs-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
 .cs-card button.cs-button {
   display: inline-flex;
   align-items: center;
@@ -85,7 +85,15 @@
 .cs-card button.cs-button:hover { background: #2b374a; color: #fff; }
 .cs-card button.cs-button:focus-visible, .cs-card .cs-code:focus-visible { outline: 2px solid #7dcfff; outline-offset: -2px; }
 .cs-card button.cs-button[aria-pressed="true"] { color: #a4d7ff; background: #20364a; }
+.cs-card .cs-checkbox { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: 13px; height: 13px; border: 1px solid currentColor; border-radius: 2px; }
+.cs-card [aria-checked="true"] .cs-checkbox::after { content: '✓'; }
 .cs-card button.cs-copied { color: #a4e5ba; background: #173526; border-color: #375e49; }
+.cs-card select.cs-retro-mode {
+  max-width: 100%; min-width: 0; border: 1px solid #39465b; border-radius: 4px;
+  padding: 4px; background: #172030; color: #e2e8f0; font: 12px system-ui;
+}
+.cs-card select.cs-retro-mode:focus-visible { outline: 2px solid #7dcfff; }
+.cs-card select.cs-retro-mode[hidden] { display: none; }
 .cs-card .cs-button svg { display: block; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .cs-card .cs-code {
   box-sizing: border-box;

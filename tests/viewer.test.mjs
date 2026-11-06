@@ -214,3 +214,174 @@ test('format preview leaves source intact until Apply and records an editor undo
     assert.equal(await page.locator('.cs-status').textContent(), '');
   } finally { await browser.close(); }
 });
+
+test('Retro display saves through Markdown, survives rerendering, and keeps Copy and Format tied to raw source', async () => {
+  const browser = await chromium.launch({ executablePath: '/usr/bin/chromium', headless: true, args: ['--no-sandbox'] });
+  try {
+    const page = await browser.newPage({ viewport: { width: 360, height: 720 } });
+    const md = new MarkdownIt();
+    renderer({ contentScriptId: 'codeStudioRenderer' }).plugin(md);
+    const source = '10 PRINT "<>& £ λ"\n20 END\n';
+    let body = '```c64 title="my retro file.bas"\n' + source + '```\n';
+    const messages = [];
+    await page.exposeFunction('saveRetro', message => {
+      messages.push(message);
+      if (message.action !== 'retro') return { ok: true, action: 'cancelled' };
+      const { setRetroInfo } = require('../dist/retro.js');
+      const { replaceFence } = require('../dist/replaceFence.js');
+      const info = setRetroInfo(message.info, message.enabled);
+      const change = replaceFence(body, message, message.text, info);
+      body = body.slice(0, change.from) + change.insert + body.slice(change.to);
+      return { ok: true, info };
+    });
+    await page.setContent(md.render(body));
+    await page.addStyleTag({ content: await readFile('dist/code-studio.css', 'utf8') + await readFile('dist/retro.css', 'utf8') });
+    await page.evaluate(() => window.webviewApi = { postMessage: (_, message) => window.saveRetro(message) });
+    await page.addScriptTag({ path: 'dist/viewer.js' });
+    const checkbox = page.getByRole('checkbox', { name: 'Retro display' });
+    await checkbox.click();
+    await page.waitForFunction(() => document.querySelector('.cs-card').dataset.csRetro === 'c64');
+    assert.equal(await checkbox.isChecked(), true);
+    assert.equal(body, '```c64 title="my retro file.bas" retro\n' + source + '```\n');
+    assert.equal(await page.locator('.joplin-source').textContent(), source);
+    await page.evaluate(html => document.body.innerHTML = html, md.render(body));
+    assert.equal(await checkbox.isChecked(), true);
+    await page.getByRole('button', { name: 'Format code' }).click();
+    assert.equal(messages.at(-1).info, 'c64 title="my retro file.bas" retro');
+    await page.getByRole('button', { name: 'Copy code' }).click();
+    assert.equal(messages.at(-1).action, 'copy');
+    assert.equal(messages.at(-1).text, source);
+    await checkbox.focus();
+    await page.keyboard.press('Space');
+    await page.waitForFunction(() => !document.querySelector('.cs-card').hasAttribute('data-cs-retro'));
+    assert.equal(await checkbox.isChecked(), false);
+    assert.equal(body, '```c64 title="my retro file.bas"\n' + source + '```\n');
+    assert.equal(await page.locator('.cs-code').evaluate(node => getComputedStyle(node).backgroundColor), 'rgb(11, 14, 20)');
+    await page.evaluate(() => window.webviewApi.postMessage = async () => ({ ok: false, error: 'This note is read-only.' }));
+    await checkbox.click();
+    await page.waitForFunction(() => document.querySelector('.cs-status').textContent.includes('read-only'));
+    assert.equal(await checkbox.isChecked(), false);
+  } finally { await browser.close(); }
+});
+
+test('Rich Text Retro display changes fence metadata in an Undo transaction and rejects read-only notes', async () => {
+  const browser = await chromium.launch({ executablePath: '/usr/bin/chromium', headless: true, args: ['--no-sandbox'] });
+  try {
+    const page = await browser.newPage();
+    const md = new MarkdownIt();
+    renderer({ contentScriptId: 'codeStudioRenderer' }).plugin(md);
+    const source = '10 PRINT "HELLO"\n';
+    await page.setContent(md.render('```bbc-basic\n' + source + '```'));
+    await page.evaluate(() => {
+      window.events = [];
+      window.undoSnapshots = [];
+      window.redo = [];
+      window.readOnly = false;
+      window.tinymce = { activeEditor: {
+        getDoc: () => document, mode: { isReadOnly: () => window.readOnly }, nodeChanged() {},
+        on(_, handler) { window.editorUndoHandler = handler; },
+        undoManager: { transact(fn) { window.undoSnapshots.push(document.body.innerHTML); window.events.push('transaction'); fn(); } },
+        fire(event) { window.events.push(event); },
+      } };
+      document.body.addEventListener('dblclick', () => window.events.push('source editor'));
+      document.body.addEventListener('mousedown', event => {
+        if (event.target.closest('button')) { window.events.push('selection'); document.body.innerHTML = document.body.innerHTML; }
+      });
+    });
+    await page.addScriptTag({ path: 'dist/viewer.js' });
+    const checkbox = page.getByRole('checkbox', { name: 'Retro display' });
+    await checkbox.click();
+    assert.equal(await checkbox.isChecked(), true);
+    assert.equal(await page.locator('.joplin-source').getAttribute('data-joplin-source-open'), '```bbc-basic retro\n');
+    assert.equal(await page.locator('.joplin-source').textContent(), source);
+    assert.deepEqual(await page.evaluate(() => window.events), ['transaction', 'joplinChange']);
+    await page.evaluate(() => {
+      window.redo.push(document.body.innerHTML);
+      document.body.innerHTML = window.undoSnapshots.pop();
+      window.editorUndoHandler();
+    });
+    assert.equal(await checkbox.isChecked(), false);
+    assert.equal(await page.locator('.cs-card').getAttribute('data-cs-retro'), null);
+    assert.equal(await page.locator('.cs-card').getAttribute('data-cs-info'), 'bbc-basic');
+    await page.evaluate(() => { document.body.innerHTML = window.redo.pop(); window.editorUndoHandler(); });
+    assert.equal(await checkbox.isChecked(), true);
+    await checkbox.focus();
+    await page.keyboard.press('Enter');
+    assert.equal(await checkbox.isChecked(), false);
+    assert.equal(await page.locator('.joplin-source').getAttribute('data-joplin-source-open'), '```bbc-basic\n');
+    await page.evaluate(() => window.readOnly = true);
+    await checkbox.click();
+    assert.equal(await checkbox.isChecked(), false);
+    assert.match(await page.getByRole('status').textContent(), /read-only/);
+    assert.equal(await page.locator('.joplin-source').textContent(), source);
+  } finally { await browser.close(); }
+});
+
+test('Rich Text uses current source settings after native code edits and repeated Retro toggles', async () => {
+  const browser = await chromium.launch({ executablePath: '/usr/bin/chromium', headless: true, args: ['--no-sandbox'] });
+  try {
+    const md = new MarkdownIt();
+    renderer({ contentScriptId: 'codeStudioRenderer' }).plugin(md);
+    const source = '10 PRINT "HELLO"\n';
+    for (const previous of ['javascript', 'c64 retro']) {
+      const page = await browser.newPage();
+      await page.setContent(md.render('```' + previous + '\n' + source + '```'));
+      await page.evaluate(() => {
+        window.messages = [];
+        window.webviewApi = { postMessage: async (_, message) => { window.messages.push(message); return { ok: true, action: 'cancelled' }; } };
+        window.tinymce = { activeEditor: {
+          getDoc: () => document, mode: { isReadOnly: () => false }, on() {}, nodeChanged() {},
+          undoManager: { transact(fn) { fn(); } }, fire() {},
+        } };
+      });
+      await page.addScriptTag({ path: 'dist/viewer.js' });
+      // Joplin's native source dialog retains the outer editable element and replaces its contents.
+      await page.evaluate(html => {
+        const template = document.createElement('div'); template.innerHTML = html;
+        document.querySelector('.joplin-editable').innerHTML = template.querySelector('.joplin-editable').innerHTML;
+      }, md.render('```bbc-basic title="listing.bas" retro-mode=6-red\n' + source + '```'));
+      const checkbox = page.getByRole('checkbox', { name: 'Retro display' });
+      await page.getByRole('button', { name: 'Format code' }).click();
+      assert.deepEqual(await page.evaluate(() => window.messages.map(({ language, info }) => ({ language, info }))), [
+        { language: 'bbc-basic', info: 'bbc-basic title="listing.bas" retro-mode=6-red' },
+      ]);
+      // A stale tick state alone must also recover, without a preceding Format or refresh event.
+      await page.evaluate(previous => { document.querySelector('.cs-card').dataset.csInfo = previous; }, previous);
+      for (const enabled of [true, false, true, false, true]) {
+        await checkbox.click();
+        assert.equal(await checkbox.isChecked(), enabled, `previous=${previous}, enabled=${enabled}`);
+        assert.equal(await page.locator('.cs-card').getAttribute('data-cs-language'), 'bbc-basic');
+        assert.equal(await page.locator('.cs-card').getAttribute('data-cs-retro'), enabled ? 'bbc' : null);
+        assert.equal(await page.locator('.cs-card').getAttribute('data-cs-retro-mode'), enabled ? '6-red' : null);
+        assert.equal(await page.locator('.joplin-source').getAttribute('data-joplin-source-open'), '```bbc-basic title="listing.bas" retro-mode=6-red' + (enabled ? ' retro' : '') + '\n');
+        assert.equal(await page.locator('.joplin-source').textContent(), source);
+      }
+      await page.getByRole('button', { name: 'Format code' }).click();
+      assert.deepEqual(await page.evaluate(() => window.messages.map(({ language, info }) => ({ language, info }))), [
+        { language: 'bbc-basic', info: 'bbc-basic title="listing.bas" retro-mode=6-red' },
+        { language: 'bbc-basic', info: 'bbc-basic title="listing.bas" retro-mode=6-red retro' },
+      ]);
+      // Native note refreshes also need to update the outer palette before another click.
+      await page.evaluate(html => {
+        const template = document.createElement('div'); template.innerHTML = html;
+        document.querySelector('.joplin-editable').innerHTML = template.querySelector('.joplin-editable').innerHTML;
+        document.dispatchEvent(new Event('joplin-noteDidUpdate'));
+      }, md.render('```msx-basic retro\n' + source + '```'));
+      assert.equal(await page.locator('.cs-card').getAttribute('data-cs-retro'), 'msx');
+      await checkbox.click();
+      assert.equal(await checkbox.isChecked(), false);
+      await checkbox.click();
+      assert.equal(await checkbox.isChecked(), true);
+      assert.equal(await page.locator('.joplin-source').getAttribute('data-joplin-source-open'), '```msx-basic retro\n');
+      await page.evaluate(html => {
+        const template = document.createElement('div'); template.innerHTML = html;
+        document.querySelector('.joplin-editable').innerHTML = template.querySelector('.joplin-editable').innerHTML;
+        document.dispatchEvent(new Event('joplin-noteDidUpdate'));
+      }, md.render('```javascript\nconst value = 1;\n```'));
+      assert.equal(await page.locator('.cs-card').getAttribute('data-cs-retro'), null);
+      assert.equal(await page.locator('.cs-card').getAttribute('data-cs-language'), 'javascript');
+      assert.equal(await checkbox.count(), 0);
+      await page.close();
+    }
+  } finally { await browser.close(); }
+});

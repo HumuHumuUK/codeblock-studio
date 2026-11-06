@@ -13,6 +13,10 @@ setFormatterAssetLoader(name => readFileSync(`dist/${name}`));
 const font = (await readFile('dist/jetbrains-mono.woff2')).toString('base64');
 const fontCss = `@font-face { font-family: "Code Block Studio Mono"; src: url(data:font/woff2;base64,${font}) format("woff2"); font-weight:400; }`;
 const cardCss = await readFile('dist/code-studio.css', 'utf8');
+let retroCss = await readFile('dist/retro.css', 'utf8');
+for (const { name, mime } of renderer({}).assets().filter(asset => asset.name.startsWith('retro-fonts/'))) {
+  retroCss = retroCss.replace(`./${name}`, `data:${mime};base64,${(await readFile(`dist/${name}`)).toString('base64')}`);
+}
 const md = new MarkdownIt();
 renderer({ contentScriptId: 'codeStudioRenderer' }).plugin(md);
 await mkdir('docs/images', { recursive: true });
@@ -56,11 +60,50 @@ try {
   assert.ok(await page.locator('.cs-code').evaluate(code => code.scrollWidth <= code.clientWidth + 1));
   await page.locator('.cs-card').screenshot({ path: 'docs/images/wrapped-code.png' });
 
+  await page.setViewportSize({ width: 1280, height: 850 });
+  const retroExamples = [
+    ['c64', '10 REM COMMODORE 64\n20 PRINT "HELLO FROM 1982"\n30 GOTO 20\n'],
+    ['bbc-basic', '10 REM BBC MICRO - MODE 7\n20 PRINT "HELLO FROM THE BEEB"\n30 GOTO 20\n'],
+    ['sinclair-basic', '10 REM ZX SPECTRUM\n20 PRINT "HELLO FROM SINCLAIR"\n30 GO TO 20\n'],
+    ['locomotive-basic', '10 REM AMSTRAD CPC\n20 PRINT "HELLO FROM LOCOMOTIVE"\n30 GOTO 20\n'],
+  ];
+  await setContent('<main class="retro-grid">' + retroExamples.map(([language, code]) => md.render('```' + language + ' retro\n' + code + '```')).join('') + '</main>',
+    noteCss + cardCss + retroCss + '.retro-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.retro-grid .cs-card{margin:0;min-width:0;display:flex;flex-direction:column}.retro-grid .cs-code{flex:1}');
+  assert.equal(await page.getByRole('checkbox', { name: 'Retro display', checked: true }).count(), 4);
+  await page.locator('main').screenshot({ path: 'docs/images/retro-displays.png' });
+
+  const retroOriginal = '10 REM COUNT TO THREE\n20 FOR I=1 TO 3\n30 PRINT "HELLO";I\n40 NEXT I\n100 END\n';
+  await page.setViewportSize({ width: 1280, height: 650 });
+  await setContent(`<div id="joplin-plugin-content">${formatPreview(retroOriginal, await formatCode(retroOriginal, 'c64'), 'c64', true)}</div>`,
+    ':root { --joplin-color:#e4e9f1; --joplin-font-family:system-ui; } body { background:#20242d; }' + dialogCss + retroCss);
+  assert.equal(await page.locator('[data-cs-retro="c64"] .cs-format-column pre').count(), 2);
+  await page.screenshot({ path: 'docs/images/retro-comparison.png' });
+
+  await page.setViewportSize({ width: 1280, height: 1500 });
+  const expanded = [
+    ['mac-basic', '10 FOR I=1 TO 3\n20 PRINT "Hello, Macintosh!"\n30 NEXT I\n'],
+    ['stos', '10 MODE 0\n20 PRINT "HELLO, STOS!"\n30 END\n'],
+    ['msx-basic', '10 COLOR 15,4,4\n20 PRINT "HELLO, MSX!"\n30 END\n'],
+    ['zx81-basic', '10 PRINT "HELLO, ZX81"\n20 GOTO 10\n'],
+    ['dragon-basic', '10 CLS\n20 PRINT "HELLO, DRAGON!"\n30 END\n'],
+    ['archimedes-basic', '10 MODE 12\n20 PRINT "Hello, Archimedes!"\n30 END\n'],
+    ['oric-basic', '10 PAPER 7:INK 0:CLS\n20 PRINT "Hello, Oric Atmos!"\n30 END\n'],
+  ];
+  const gridCss = '.retro-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.retro-grid .cs-card{margin:0;min-width:0;display:flex;flex-direction:column}.retro-grid .cs-code{flex:1}';
+  await setContent('<main class="retro-grid">' + expanded.map(([language, code]) => md.render('```' + language + ' retro\n' + code + '```')).join('') + '</main>', noteCss + cardCss + retroCss + gridCss);
+  await page.locator('main').screenshot({ path: 'docs/images/retro-expanded.png' });
+  await setContent('<main class="retro-grid">' + ['0', '1', '2', '4', '6-blue', '6-red', '7'].map(mode => md.render('```bbc-basic retro retro-mode=' + mode + '\n10 REM BBC MICRO\n20 PRINT "HELLO"\n30 GOTO 20\n```')).join('') + '</main>', noteCss + cardCss + retroCss + gridCss);
+  await page.locator('main').screenshot({ path: 'docs/images/bbc-modes.png' });
+  await page.setViewportSize({ width: 1280, height: 650 });
+  await setContent(`<div id="joplin-plugin-content">${formatPreview(retroOriginal, await formatCode(retroOriginal, 'bbc-basic'), 'bbc-basic', true, '6-red')}</div>`,
+    ':root { --joplin-color:#e4e9f1; --joplin-font-family:system-ui; } body { background:#20242d; }' + dialogCss + retroCss);
+  await page.screenshot({ path: 'docs/images/bbc-mode6-comparison.png' });
+
   const svg = await readFile('assets/icon.svg', 'utf8');
   for (const size of [48, 128]) {
     await page.setViewportSize({ width: size, height: size });
     await page.setContent(`<style>html,body{margin:0;background:transparent}svg{display:block;width:100vw;height:100vh}</style>${svg}`);
     await page.screenshot({ path: `assets/icon-${size}.png`, omitBackground: true });
   }
-  console.log('Created three component screenshots and 48/128px icons from local plugin assets.');
+  console.log('Created eight component screenshots and 48/128px icons from local plugin assets.');
 } finally { await browser.close(); }

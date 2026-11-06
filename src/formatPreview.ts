@@ -1,5 +1,6 @@
 import { diffArrays, diffChars } from 'diff';
 import { escapeHtml } from './renderer';
+import { isBbcMode, retroMachine } from './retro';
 
 interface PreviewLine { text: string; number: number; newline: boolean }
 interface PreviewRow { original?: PreviewLine; formatted?: PreviewLine }
@@ -71,7 +72,7 @@ function previewText(text: string, changed: boolean): string {
     : '<span class="cs-diff-tab" data-glyph="→" title="Tab">\t</span>')}</mark>`;
 }
 
-export function formatPreview(original: string, formatted: string, language: string): string {
+export function formatPreview(original: string, formatted: string, language: string, retro = false, mode = '7'): string {
   const rows = alignPreviewLines(original, formatted);
   const panes: Record<'original' | 'formatted', string[]> = { original: [], formatted: [] };
   const deadline = Date.now() + 200;
@@ -98,7 +99,8 @@ export function formatPreview(original: string, formatted: string, language: str
   }
   const last = rows[rows.length - 1];
   const gutter = String(Math.max(last?.original?.number ?? 0, last?.formatted?.number ?? 0, 1)).length;
-  return `<section class="cs-format-preview" style="--cs-diff-gutter:${Math.max(2, gutter)}ch">
+  const machine = retro && retroMachine(language);
+  return `<section class="cs-format-preview"${machine ? ` data-cs-retro="${machine}"` : ''}${machine === 'bbc' ? ` data-cs-retro-mode="${isBbcMode(mode) ? mode : '7'}"` : ''} style="--cs-diff-gutter:${Math.max(2, gutter)}ch">
     <h2>Format ${escapeHtml(language)}</h2>
     <p>Review the changes. Apply updates this code block; Copy leaves the note unchanged. You can undo an applied change in the editor.</p>
     <p class="cs-diff-legend">Scroll either pane to move both. Highlights show edited text; <span>· space</span> <span>→ tab</span> <span>↵ line break</span> <span>∅ no final line break</span>. Hatched gaps align matching code.${original.includes('\r') || formatted.includes('\r') ? ' ␍ marks a carriage return.' : ''}</p>

@@ -1,0 +1,8 @@
+﻿The FontStruction “Acorn Archimedes”
+(https://fontstruct.com/fontstructions/show/1413139) by Damien Guard is licensed
+under a Creative Commons Attribution Share Alike license
+(http://creativecommons.org/licenses/by-sa/3.0/).
+“Acorn Archimedes” was originally cloned (copied) from the FontStruction
+“BBC Micro” (https://fontstruct.com/fontstructions/show/1009080) by Damien
+Guard, which is licensed under a Creative Commons Attribution Share Alike
+license (http://creativecommons.org/licenses/by-sa/3.0/).

@@ -16,6 +16,10 @@ The comparison panes scroll together and keep matching code aligned when formatt
 
 Formatting is available for explicitly labelled Python, Bash/POSIX shell, JavaScript, TypeScript, SQL dialects, Go, C-family languages, Lua, Dart, Rust, PowerShell 7, Dockerfile, Terraform/HCL, retro BASIC listings, web templates/styles and several data formats. Syntax highlighting supports more languages than formatting; unsupported formatters are not offered.
 
+The Rich Text code-block editing window has a searchable Language dropdown. It stays closed on entry, completes language prefixes inside the field as you type, and opens for browsing when you click the arrow or use arrow keys. The open list filters by language, alias or retro computer name, with mouse or arrow-key/Enter selection. Each language appears once; aliases remain searchable and directly typeable. Custom typed labels are also accepted.
+
+Machine-specific BASIC blocks offer a saved Retro display checkbox: original-style fonts and familiar screen colours for C64, BBC Micro Mode 7, ZX Spectrum, Amstrad CPC, Apple II, DOS BASIC, Atari 8-bit, Amiga, Macintosh, Atari ST, MSX, ZX81, Dragon, Archimedes and Oric Atmos. BBC blocks also have saved bitmap/teletext mode presets, including blue/red Mode 6 with black inter-row gaps. The same screen appears on both sides of the formatting comparison. Fonts are bundled locally with their original licences.
+
 The cards work in Joplin Desktop's Rich Text editor and Markdown preview. Notes remain ordinary Markdown, and the Markdown source editor remains a source view.
 
 All formatters, highlighting code and fonts are bundled. Processing stays on the device: no accounts, AI services, analytics, system formatter installations or execution of snippets.

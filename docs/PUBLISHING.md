@@ -1,8 +1,8 @@
 # Publication preparation
 
-Prepared on 5 November 2026. Candidate: **Code Block Studio 1.4.0**.
+Updated on 6 November 2026. Candidate: **Code Block Studio 1.7.4**.
 
-**GitHub source publication is authorised; npm and Joplin catalogue publication remain on hold.** Leonard requested public hosting under `HumuHumuUK` and supplied the Ko-fi support URL. The package remains `private: true`, so public GitHub hosting does not enable npm publication. There is no automatic release or registry submission workflow.
+**Gitea and GitHub source publication are authorised; npm and Joplin catalogue publication remain on hold.** Gitea is the primary development repository. Leonard requested public hosting under `HumuHumuUK` and supplied the Ko-fi support URL. The package remains `private: true`, so public GitHub hosting does not enable npm publication. There is no automatic release or registry submission workflow.
 
 ## Prepared material
 
@@ -14,6 +14,32 @@ Prepared on 5 November 2026. Candidate: **Code Block Studio 1.4.0**.
 - Built `.jpl`, catalogue metadata `.json` and checksums under `publish/`. The metadata includes `_publish_hash`; `_publish_commit` is populated only for a clean checkout, so uncommitted code is not attributed to an older commit.
 - A package file allowlist excludes source workspaces, dependencies, historical releases, research archives and local validation records from the npm tarball.
 - Optional support links use Leonard's [Ko-fi page](https://ko-fi.com/W4J72A4KLF). The README and npm package metadata contain the link; `.github/FUNDING.yml` configures GitHub's Sponsor button with `ko_fi: W4J72A4KLF`. No payment widget or runtime request is added to the plugin.
+
+## Gitea first, then GitHub
+
+Commit and push tested development changes to the private Gitea repository first. Export the intended source from that committed revision with `git archive`, review the export, and apply it to the existing public checkout while retaining its separate public history. Commit the reviewed public source locally, rebuild and validate from that clean public commit, then preserve the exact installer, metadata, source ZIP and checksums under `releases/vVERSION/` in Gitea before publishing the public commit, tag and matching assets on GitHub.
+
+The private development history and public source history are intentionally separate. `.gitattributes` excludes private records from `git archive`; it does not filter files or history in a normal Git push. Do not configure a whole-repository push mirror from the private project. Gitea's [push mirroring documentation](https://docs.gitea.com/usage/repository/repo-mirror/#pushing-to-a-remote-repository) warns that it force-pushes and overwrites the destination.
+
+### Manual Gitea public preparation
+
+The GitHub repository has been imported into a separate Gitea repository named `codeblock-studio-public`, without pull mirroring. Its GitHub push mirror has an interval of `0` and commit-triggered sync disabled. The private `codeblock-studio` repository has no push mirror. Keep both histories separate.
+
+This source update is deliberately manual. Do not add a private-to-public push mirror: it would copy private Git history as well as the current files. The preparation command creates a reviewed file export on top of the public repository's existing history, including the example Markdown note. GitHub synchronisation remains a separate manual action after the public Gitea push.
+
+After committing, testing and pushing development changes to private Gitea, run this from the private checkout:
+
+```sh
+npm run prepare-public
+```
+
+The command fetches `origin/main` and exports that committed source using its `.gitattributes` exclusions. Local uncommitted and untracked work is not included. It derives the public Gitea URL by changing the origin repository name from `codeblock-studio` to `codeblock-studio-public`, clones its independent public history into a new `work/public-update-…/public/` directory, replaces the files and stages the complete proposed change, including deletions. It refuses known private paths and shared private/public root history. It does not commit, push, tag or synchronise a mirror; each run creates a fresh review checkout.
+
+In the printed public checkout, review `git diff --cached`, commit the approved update and run the clean validation/build steps. After preserving the matching release files in private Gitea, push that public commit to its Gitea `origin` with `git push origin main`. Then use **Synchronize Now** in the `codeblock-studio-public` mirror settings to update GitHub. Review and push any intended public tag separately; the preparation command does not create one.
+
+GitHub-only commits can be overwritten by the push mirror, so check for them before synchronising. Git mirroring carries commits, branches and tags; GitHub release descriptions and attached installers still require their separate publication step.
+
+The initial GitHub previews were published before the corresponding Gitea update. The Gitea-first sequence above applies to subsequent publications; preserve those existing public commits and released bytes.
 
 ## GitHub source destination
 

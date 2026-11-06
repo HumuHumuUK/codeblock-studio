@@ -1,5 +1,6 @@
 /releases/** export-ignore
 /archive/** export-ignore
+/work/** export-ignore
 /docs/PROJECT.md export-ignore
 /docs/RESEARCH.md export-ignore
 /VALIDATION.md export-ignore

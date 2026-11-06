@@ -59,7 +59,7 @@ Write-Output "Hello, $Name"
 
 ## Retro BASIC · keep the program numbers
 
-Formatting aligns the original line numbers and indents the loop. It keeps the statements, their case and the quoted text intact.
+Formatting aligns the original line numbers and indents the loop. It keeps the statements, their case and the quoted text intact. Tick **Retro display** beside Format to use the C64 font and blue screen, including both comparison panes. The choice is saved with this block; untick to restore normal highlighting.
 
 \`\`\`commodore-basic title="hello.bas"
 10 FOR I=1 TO 3

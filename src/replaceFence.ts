@@ -3,15 +3,26 @@ import { FormatTarget, safeFence } from './formatLanguages';
 
 const md = new MarkdownIt();
 // Work against the editor's current document, never an earlier saved snapshot.
-export function replaceFence(body: string, target: FormatTarget, formatted: string): { from: number; to: number; insert: string } {
+export function replaceFence(body: string, target: FormatTarget, formatted: string, info = target.info): { from: number; to: number; insert: string } {
   const fences = md.parse(body, {}).filter(t => t.type === 'fence');
   const token = fences[target.fenceIndex];
   if (!token?.map || token.content !== target.text || token.info !== target.info) {
-    throw new Error('This code block has changed. Close the preview and choose Format again.');
+    throw new Error('This code block has changed. Try its toolbar control again.');
   }
   const lines = body.match(/[^\n]*\n|[^\n]+$/g) || [];
   const [start, end] = token.map;
   const opening = lines[start].replace(/\r?\n$/, '');
+  const fenceAt = opening.indexOf(token.markup);
+  if (fenceAt < 0) throw new Error('Could not locate the code fence.');
+  const from = lines.slice(0, start).join('').length;
+  if (formatted === target.text) {
+    // A display choice changes only the opening line, preserving every source byte.
+    const to = from + opening.length;
+    const insert = opening.slice(0, fenceAt) + token.markup + info;
+    const check = md.parse(body.slice(0, from) + insert + body.slice(to), {}).filter(t => t.type === 'fence')[target.fenceIndex];
+    if (!check || check.content !== target.text || check.info !== info) throw new Error('Could not preserve this code block.');
+    return { from, to, insert };
+  }
   const closing = lines[end - 1].replace(/\r?\n$/, '');
   const marker = token.markup[0];
   const closeMatch = closing.match(marker === '`' ? /^(.*?)`{3,}([ \t]*)$/ : /^(.*?)~{3,}([ \t]*)$/);
@@ -27,17 +38,14 @@ export function replaceFence(body: string, target: FormatTarget, formatted: stri
     }
   }
   const markup = safeFence(token.markup, formatted);
-  const fenceAt = opening.indexOf(token.markup);
-  if (fenceAt < 0) throw new Error('Could not locate the code fence.');
   const eol = lines[start].endsWith('\r\n') ? '\r\n' : '\n';
   const content = formatted.replace(/\n$/, '').split('\n').map(line => prefix + line).join(eol);
-  const insert = opening.slice(0, fenceAt) + markup + opening.slice(fenceAt + token.markup.length) + eol
+  const insert = opening.slice(0, fenceAt) + markup + info + eol
     + (formatted ? content + eol : '') + closeMatch[1] + markup + closeMatch[2]
     + (lines[end - 1].endsWith('\n') ? eol : '');
-  const from = lines.slice(0, start).join('').length;
   const to = lines.slice(0, end).join('').length;
   const check = md.parse(body.slice(0, from) + insert + body.slice(to), {}).filter(t => t.type === 'fence')[target.fenceIndex];
-  if (!check || check.content !== formatted || check.info !== target.info) {
+  if (!check || check.content !== formatted || check.info !== info) {
     throw new Error('This block uses indentation that could not be preserved. Use Copy formatted instead.');
   }
   return { from, to, insert };

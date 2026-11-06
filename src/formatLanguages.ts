@@ -21,11 +21,20 @@ const parsers: Record<string, string> = {
   terraform: 'terraform', tf: 'terraform', opentofu: 'terraform', hcl: 'hcl',
   plsql: 'sql-plsql', oracle: 'sql-plsql', snowflake: 'sql-snowflake', duckdb: 'sql-duckdb',
   redshift: 'sql-redshift', db2: 'sql-db2', hive: 'sql-hive',
-  basic: 'basic-generic', 'bbc-basic': 'basic-bbc', bbcbasic: 'basic-bbc',
-  'sinclair-basic': 'basic-sinclair', 'commodore-basic': 'basic-commodore', 'c64-basic': 'basic-commodore',
-  'locomotive-basic': 'basic-locomotive', applesoft: 'basic-applesoft',
+  basic: 'basic-generic', 'bbc-basic': 'basic-bbc', bbcbasic: 'basic-bbc', bbc: 'basic-bbc', 'bbc-micro': 'basic-bbc',
+  'sinclair-basic': 'basic-sinclair', spectrum: 'basic-sinclair', 'zx-spectrum': 'basic-sinclair',
+  'commodore-basic': 'basic-commodore', 'c64-basic': 'basic-commodore', c64: 'basic-commodore',
+  'locomotive-basic': 'basic-locomotive', amstrad: 'basic-locomotive', 'amstrad-cpc': 'basic-locomotive', cpc: 'basic-locomotive', applesoft: 'basic-applesoft',
   gwbasic: 'basic-gwbasic', qbasic: 'basic-qbasic', 'atari-basic': 'basic-atari', amos: 'basic-amos',
+  'mac-basic': 'basic-mac', macintosh: 'basic-mac', 'mac-quickbasic': 'basic-macquick',
+  stos: 'basic-stos', 'stos-basic': 'basic-stos', 'gfa-basic': 'basic-gfa', gfa: 'basic-gfa',
+  'msx-basic': 'basic-msx', msx: 'basic-msx', msx2: 'basic-msx',
+  'zx81-basic': 'basic-zx81', zx81: 'basic-zx81',
+  'dragon-basic': 'basic-dragon', dragon32: 'basic-dragon', dragon64: 'basic-dragon',
+  'archimedes-basic': 'basic-archimedes', archimedes: 'basic-archimedes', 'bbc-basic-v': 'basic-archimedes', 'bbc-basic-vi': 'basic-archimedes',
+  'oric-basic': 'basic-oric', oric: 'basic-oric', 'oric-atmos': 'basic-oric',
 };
+export const formatterLanguages = Object.keys(parsers);
 export function formatParser(language: string): string | undefined {
   const key = language.toLowerCase();
   return Object.prototype.hasOwnProperty.call(parsers, key) ? parsers[key] : undefined;

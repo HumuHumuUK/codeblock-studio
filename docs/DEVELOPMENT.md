@@ -24,6 +24,7 @@ The tests cover renderer behaviour, exact copying, wrapping, formatting, block t
 - The Lua/Dart, dprint Dockerfile/HCL and Scalar Rust assets are copied into the installer. Rust's Brotli compression is expanded during the build using Node's standard library; its runtime receives raw bytes. Keep the Rust embedded-library notices and binary-only dprint package licences in the installer too.
 - Dart is deliberately pinned to `@wasm-fmt/dart_fmt` 0.3.0: the 0.4.0 package failed valid input with `RuntimeError: illegal cast` in the current host. Recheck both Node and Joplin when upgrading it. The pinned Scalar browser entry is imported directly because the package's Node entry resolves an unbundled asset path.
 - PowerShell's formatter may synthesise missing delimiters; our token/literal guard rejects those changes. Its output targets PowerShell 7. Retro BASIC formatting changes only leading layout whitespace and line endings; tests must preserve every physical statement and program number.
+- Retro display stores a `retro` field in each fence's info. Use `src/retro.ts` for detection/mutation so quoted titles survive. Font files under `assets/retro-fonts/` must remain unchanged and ship with their licences and provenance. Tests exercise local font loading, palettes in cards/comparisons, metadata-only edits, read-only failures, rerendering and simulated Rich Text Undo/Redo.
 - The `lodash-es` override selects 4.18.1 to address security advisories while retaining the existing Chevrotain/TOML parser versions. Markdown-it 14.3.3 and esbuild 0.28.1 address their reported advisories. Recheck compatibility and the audit when changing these pins.
 - Joplin declarations and the API shim are in `api/`, with their generator licence.
 
@@ -37,13 +38,19 @@ For a change to formatting or editor integration, check both Markdown preview an
 
 ## Releases
 
-Public source and preview installers are hosted on GitHub. npm and Joplin catalogue publication remain on hold; see [publication preparation](PUBLISHING.md) for the remaining live checks and publication steps. Use `npm run screenshots` to regenerate the fictional-example component screenshots and original icons after a build; its assertions verify that the captured controls and source preservation work.
+Gitea is the primary development repository; GitHub hosts reviewed public source and preview installers. npm and Joplin catalogue publication remain on hold; see [publication preparation](PUBLISHING.md) for the remaining live checks and publication steps. Use `npm run screenshots` to regenerate the fictional-example component screenshots and original icons after a build; its assertions verify that the captured controls and source preservation work.
 
 1. Keep the version consistent in `src/manifest.json`, `package.json` and the root package entry in `package-lock.json`.
 2. Update the change history, documentation and validation results.
 3. Run the checks above and the desktop checks appropriate to the change.
-4. Copy the intended installer to `releases/vVERSION/`. Keep an already distributed installer unchanged; a rebuild can have a different archive hash because of timestamps.
-5. Export source from the committed project using `git archive --format=zip --prefix=codeblock-studio/ HEAD`. Exclude release binaries from that source export so it contains only source and documentation.
-6. Record SHA-256 checksums for the installer and source archive, and verify archive contents before distribution.
+4. Commit and push development changes to private Gitea first. Run `npm run prepare-public` to stage an export of committed Gitea source in a fresh checkout of `codeblock-studio-public`. Review `git diff --cached` in the printed checkout; private history and uncommitted work are not copied.
+5. Commit the reviewed public source locally, run the checks from that clean commit, and build the installer, metadata and source ZIP. Record SHA-256 checksums and verify archive contents.
+6. Preserve those exact files under `releases/vVERSION/`, then commit and push them to private Gitea. Push the reviewed public source commit and intended public tag from the public checkout to its Gitea origin, then use **Synchronize Now** on that repository's GitHub push mirror. Publish matching GitHub release assets separately. Keep distributed bytes unchanged; rebuilding can change archive timestamps and checksums. Do not mirror private Git history to GitHub.
 
 Generated dependencies, `dist/`, `publish/`, local work and `archive/` are excluded from Git. Only the current release files under `releases/` are intended for distribution.
+
+Retro font variants are already bundled. To regenerate only those variants, run `scripts/prepare-retro-fonts.py` in a Python environment with FontTools. Normal builds need neither; preserve the original files, companion licences and per-directory change notices. See `assets/retro-fonts/README.md` for provenance and exact changes.
+
+The Rich Text language picker listens for TinyMCE’s `OpenWindow` event and uses the native dialog’s `languageInput` data field. Keep suggestions generated from `renderer.codeLanguages()` during the build rather than adding a second hand-maintained list. Test keyboard selection against the native dialog, since Enter normally submits it. `tests/language-picker.test.mjs` covers the cross-document hook, filtering, custom labels, mouse/keyboard selection, repeated loading and unrelated/disabled dialogs.
+
+Language choices carry a primary `value`, display `label` and `aliases` array. Keep aliases searchable/typeable while grouping duplicate rows, and retain distinct format variants (including shell sessions versus POSIX shell scripts). Catalogue tests check unique display names, complete Highlight.js spelling coverage, representative alias groups and distinct dialects; browser checks cover short-name filtering and exact typed aliases.

@@ -10,6 +10,7 @@ test('catalogue metadata matches the installer and the package contains only int
   const info = JSON.parse(await readFile(`publish/${manifest.id}.json`, 'utf8'));
   const installer = `publish/${manifest.id}.jpl`;
   const hash = createHash('sha256').update(await readFile(installer)).digest('hex');
+  assert.deepEqual(await readFile('publish/code-block-studio-examples.md'), await readFile('examples/code-block-studio.md'));
   assert.equal(info._publish_hash, `sha256:${hash}`);
   assert.equal(info.author, 'Leonard Powers');
   assert.equal(info.version, pkg.version);
@@ -29,7 +30,7 @@ test('catalogue metadata matches the installer and the package contains only int
   const files = packed.files.map(file => file.path);
   assert.ok(pkg.name.startsWith('joplin-plugin-'));
   assert.ok(pkg.keywords.includes('joplin-plugin'));
-  for (const name of [`publish/${manifest.id}.jpl`, `publish/${manifest.id}.json`, 'CREDITS.md', 'LICENSE', 'README.md']) assert.ok(files.includes(name), name);
+  for (const name of [`publish/${manifest.id}.jpl`, `publish/${manifest.id}.json`, 'publish/code-block-studio-examples.md', 'CREDITS.md', 'LICENSE', 'README.md']) assert.ok(files.includes(name), name);
   assert.equal(files.some(name => /^(src|api|node_modules|archive|work|releases|\.git)\//.test(name)), false);
   for (const screenshot of manifest.screenshots) {
     assert.ok(files.includes(screenshot.src), screenshot.src);

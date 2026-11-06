@@ -45,4 +45,13 @@ export const languageFixtures = [
   ['qbasic', 'FOR n=1 TO 3\nIF n=2 THEN\nPRINT "MIDDLE"\nELSE\nPRINT n\nEND IF\nNEXT n\n'],
   ['atari-basic', '10 GRAPHICS 0\n20 FOR I=1 TO 3\n30 PRINT "HELLO";I\n40 NEXT I\n50 END\n'],
   ['amos', 'For I=1 To 3\nPrint "HELLO";I\nNext I\nEnd\n'],
+  ['mac-basic', '10 FOR I=1 TO 3\n20 PRINT "Hello, Macintosh!";I\n30 NEXT I\n40 END\n'],
+  ['mac-quickbasic', 'FOR I=1 TO 3\nIF I=2 THEN\nPRINT "Hello, QuickBASIC!"\nEND IF\nNEXT I\n'],
+  ['stos', '10 MODE 0\n20 FOR I=1 TO 3\n30 PRINT "HELLO, STOS!";I\n40 NEXT I\n50 END\n'],
+  ['gfa-basic', 'FOR i=1 TO 3\nIF i=2\nPRINT "Hello, GFA BASIC!"\nENDIF\nNEXT i\n'],
+  ['msx-basic', '10 SCREEN 0\n20 COLOR 15,4,4\n30 FOR I=1 TO 3\n40 PRINT "HELLO, MSX!";I\n50 NEXT I\n60 END\n'],
+  ['zx81-basic', '10 FOR N=1 TO 3\n20 PRINT "HELLO, ZX81";N\n30 NEXT N\n40 STOP\n'],
+  ['dragon-basic', '10 CLS\n20 FOR I=1 TO 3\n30 PRINT "HELLO, DRAGON!";I\n40 NEXT I\n50 END\n'],
+  ['archimedes-basic', '10 MODE 12\n20 count%=0\n30 REPEAT\n40 count%=count%+1\n50 PRINT "Hello, Archimedes! ";count%\n60 UNTIL count%=3\n70 END\n'],
+  ['oric-basic', '10 PAPER 7:INK 0:CLS\n20 FOR I=1 TO 3\n30 PRINT "Hello, Oric Atmos!";I\n40 NEXT I\n50 END\n'],
 ];

@@ -186,6 +186,7 @@ test('the real plugin keeps Copy and Apply tied to source text and packages the 
   vm.runInNewContext(await readText('dist/index.js', 'utf8'), { joplin, require, console, Buffer, TextEncoder, TextDecoder, URL, process, performance, crypto: globalThis.crypto, setTimeout, clearTimeout });
   await startup();
   assert.ok(scripts.includes('./formatDialog.js'));
+  assert.ok(scripts.includes('./retro.css'));
   const message = { action: 'format', text: 'const a={x:1};\n', language: 'js', info: 'js', fenceIndex: 0 };
   choice = 'cancel';
   assert.equal((await onMessage(message)).action, 'cancelled');
@@ -222,6 +223,31 @@ test('the real plugin keeps Copy and Apply tied to source text and packages the 
     assert.doesNotMatch(response.rowsHtml, /cs-diff/, language);
     assert.equal((await onMessage(request)).action, 'applied', language);
     assert.equal(applies.at(-1)[1].args[1], formatted, language);
+  }
+  const retro = { ...message, language: 'c64', info: 'c64 title="retro listing.bas" retro',
+    text: '10 FOR I=1 TO 3\n20 PRINT I\n30 NEXT I\n100 END\n' };
+  choice = 'copyOriginal';
+  await onMessage(retro);
+  assert.equal(copies.at(-1), retro.text);
+  assert.match(html, /data-cs-retro="c64"/);
+  choice = 'ok';
+  await onMessage(retro);
+  assert.equal(applies.at(-1)[1].args[0].info, retro.info);
+  await onMessage({ ...retro, info: 'c64' });
+  assert.doesNotMatch(html, /data-cs-retro=/);
+  const toggle = await onMessage({ ...retro, action: 'retro', enabled: false });
+  assert.equal(toggle.ok, true);
+  assert.equal(toggle.info, 'c64 title="retro listing.bas"');
+  assert.equal(applies.at(-1)[1].args[1], retro.text);
+  assert.equal(applies.at(-1)[1].args[2], toggle.info);
+  const bbc = { ...retro, language: 'bbc-basic', info: 'bbc-basic retro title="retro-mode=7"' };
+  const modeChange = await onMessage({ ...bbc, action: 'retro', enabled: true, mode: '6-red' });
+  assert.equal(modeChange.ok, true);
+  assert.equal(modeChange.info, bbc.info + ' retro-mode=6-red');
+  await onMessage({ ...bbc, info: modeChange.info });
+  assert.match(html, /data-cs-retro-mode="6-red"/);
+  for (const invalid of [{ ...retro, enabled: 'yes' }, { ...message, enabled: true }, { ...retro, enabled: true, mode: '6-red' }, { ...bbc, enabled: true, mode: '__proto__' }, { ...bbc, enabled: true, mode: '<script>' }]) {
+    assert.equal((await onMessage({ ...invalid, action: 'retro' })).ok, false);
   }
   const installer = 'publish/local.lpowers.code-studio.jpl';
   const entries = execFileSync('tar', ['-tf', installer], { encoding: 'utf8' }).split('\n');

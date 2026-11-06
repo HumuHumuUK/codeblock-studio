@@ -32,10 +32,10 @@ function statements(line: string, apostropheComments: boolean): string[] {
 }
 
 export function formatBasic(code: string, dialect: string): string {
-  const pc = dialect === 'qbasic' || dialect === 'gwbasic';
-  const structured = dialect === 'qbasic' || dialect === 'amos';
-  const repeat = dialect === 'bbc' || dialect === 'amos';
-  const whileLoop = pc || dialect === 'bbc' || dialect === 'locomotive' || dialect === 'amos';
+  const pc = ['qbasic', 'gwbasic', 'mac', 'macquick', 'msx'].includes(dialect);
+  const structured = ['qbasic', 'amos', 'macquick', 'stos', 'gfa', 'archimedes'].includes(dialect);
+  const repeat = ['bbc', 'archimedes', 'amos', 'stos', 'gfa'].includes(dialect);
+  const whileLoop = pc || repeat || dialect === 'locomotive';
   const stack: string[] = [];
   const lines = code.replace(/\r\n?/g, '\n').split('\n');
   const width = lines.reduce((max, line) => Math.max(max, line.match(/^[ \t]*(\d+)/)?.[1].length || 0), 0);
@@ -48,7 +48,7 @@ export function formatBasic(code: string, dialect: string): string {
     if (!line.trim()) { reserve(line.length); return line; }
     const numbered = line.match(/^[ \t]*(\d+)([ \t]*)(.*)$/);
     const body = numbered ? numbered[3] : line.replace(/^[ \t]*/, '');
-    const parts = statements(body, pc || dialect === 'amos');
+    const parts = statements(body, pc || ['amos', 'stos', 'gfa'].includes(dialect));
     let indent = stack.length;
     for (const [index, part] of parts.entries()) {
       let close = '';
@@ -67,7 +67,7 @@ export function formatBasic(code: string, dialect: string): string {
       } else if (/^FOR\b/.test(part)) stack.push('for');
       else if (repeat && /^REPEAT\b/.test(part)) stack.push('repeat');
       else if (whileLoop && /^WHILE\b/.test(part)) stack.push('while');
-      else if (structured && /^IF\b/.test(part) && (/\bTHEN\s*$/.test(part) || (dialect === 'amos' && !/\bTHEN\b/.test(part)))) stack.push('if');
+      else if (structured && /^IF\b/.test(part) && (/\bTHEN\s*$/.test(part) || (['amos', 'gfa'].includes(dialect) && !/\bTHEN\b/.test(part)))) stack.push('if');
       else if (structured && /^DO(?:\s|$)/.test(part)) stack.push('do');
       else if (structured && /^(?:SUB|FUNCTION|PROCEDURE)\b/.test(part)) stack.push('procedure');
     }

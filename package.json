@@ -1,6 +1,6 @@
 {
   "name": "joplin-plugin-code-block-studio",
-  "version": "1.4.0",
+  "version": "1.7.4",
   "private": true,
   "description": "Readable code blocks with syntax highlighting, sticky Copy controls and offline formatting previews with aligned scrolling and visible changes.",
   "author": "Leonard Powers",
@@ -35,6 +35,7 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "dist": "npm run build",
+    "prepare-public": "node scripts/prepare-public.mjs",
     "screenshots": "node scripts/screenshots.mjs",
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/*.test.mjs"

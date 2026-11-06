@@ -5,6 +5,7 @@ import { formatCode, setFormatterAssetLoader } from './formatCode';
 import { formatParser, FormatTarget } from './formatLanguages';
 import { highlightCode, splitHighlightedLines } from './renderer';
 import { formatPreview } from './formatPreview';
+import { bbcMode, hasRetro, isBbcMode, retroMachine, setBbcMode, setRetroInfo } from './retro';
 
 joplin.plugins.register({
   onStart: async () => {
@@ -14,6 +15,7 @@ joplin.plugins.register({
     const formatDialog = await joplin.views.dialogs.create('codeStudioFormatPreview');
     await joplin.views.dialogs.setFitToContent(formatDialog, false);
     await joplin.views.dialogs.addScript(formatDialog, './formatDialog.css');
+    await joplin.views.dialogs.addScript(formatDialog, './retro.css');
     await joplin.views.dialogs.addScript(formatDialog, './formatDialog.js');
     await joplin.views.dialogs.setButtons(formatDialog, [
       { id: 'ok', title: 'Apply formatting' }, { id: 'copyFormatted', title: 'Copy formatted' },
@@ -42,24 +44,37 @@ joplin.plugins.register({
     await joplin.contentScripts.register(ContentScriptType.CodeMirrorPlugin, 'codeStudioEditor', './editor.js');
     await joplin.contentScripts.onMessage('codeStudioRenderer', async (message: unknown) => {
       if (!message || typeof message !== 'object') throw new Error('Invalid Code Block Studio message');
-      const m = message as Partial<FormatTarget> & { action?: string; editor?: string };
+      const m = message as Partial<FormatTarget> & { action?: string; editor?: string; enabled?: boolean; mode?: string };
       if (typeof m.text !== 'string') return { ok: false, error: 'The code could not be read.' };
       if (m.action === 'copy') {
         await joplin.clipboard.writeText(m.text);
         return { ok: true };
       }
-      if (m.action !== 'format' || typeof m.language !== 'string' || !formatParser(m.language)
+      if (!['format', 'retro'].includes(m.action || '') || typeof m.language !== 'string' || !formatParser(m.language)
         || typeof m.info !== 'string' || !Number.isInteger(m.fenceIndex) || m.fenceIndex! < 0) {
         return { ok: false, error: 'Formatting is not available for this code block.' };
+      }
+      if (m.action === 'retro' && (!retroMachine(m.language) || typeof m.enabled !== 'boolean'
+        || (m.mode !== undefined && (retroMachine(m.language) !== 'bbc' || !isBbcMode(m.mode))))) {
+        return { ok: false, error: 'Retro display is not available for this code block.' };
       }
       if (formatInProgress) return { ok: false, error: 'A formatting preview is already open.' };
       formatInProgress = true;
       try {
         const note = await joplin.workspace.selectedNote();
         if (!note) throw new Error('Open a note before formatting code.');
+        if (m.action === 'retro') {
+          const toggled = setRetroInfo(m.info, m.enabled!);
+          const info = m.mode === undefined ? toggled : setBbcMode(toggled, m.mode);
+          const result = await joplin.commands.execute('editor.execCommand', {
+            name: 'codeStudioFormatApply', args: [m as FormatTarget, m.text, info],
+          });
+          if (!result?.ok) throw new Error('The editor could not save Retro display. Open the Markdown editor and try again.');
+          return { ok: true, info };
+        }
         const formatted = await formatCode(m.text, m.language);
         if (formatted === m.text) return { ok: true, action: 'unchanged' };
-        await joplin.views.dialogs.setHtml(formatDialog, formatPreview(m.text, formatted, m.language));
+        await joplin.views.dialogs.setHtml(formatDialog, formatPreview(m.text, formatted, m.language, hasRetro(m.info), bbcMode(m.info)));
         const choice = await joplin.views.dialogs.open(formatDialog);
         if (choice.id === 'copyOriginal' || choice.id === 'copyFormatted') {
           await joplin.clipboard.writeText(choice.id === 'copyOriginal' ? m.text : formatted);

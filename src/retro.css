@@ -1,0 +1,95 @@
+@font-face { font-family: "CS C64"; src: url("./retro-fonts/PetMe64.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "CS BBC Mode 7"; src: url("./retro-fonts/bedstead.otf") format("opentype"); font-display: swap; }
+@font-face { font-family: "CS Spectrum"; src: url("./retro-fonts/Speccy.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "CS CPC"; src: url("./retro-fonts/cpc464.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "CS Apple II"; src: url("./retro-fonts/PrintChar21.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "CS DOS"; src: url("./retro-fonts/Web437_IBM_VGA_8x16.woff") format("woff"); font-display: swap; }
+@font-face { font-family: "CS Atari"; src: url("./retro-fonts/CandyAntics.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "CS Amiga"; src: url("./retro-fonts/amiga-topaz/amiga-topaz.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "CS Macintosh"; src: url("./retro-fonts/mac-monaco/monaco-9.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "CS Chicago"; src: url("./retro-fonts/mac-chicago/chicago-12.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "CS ST"; src: url("./retro-fonts/atari-st/code-studio-st.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "CS MSX"; src: url("./retro-fonts/msx/msx-international.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "CS ZX81"; src: url("./retro-fonts/zx81/zx81-vdu.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "CS Dragon"; src: url("./retro-fonts/HotCoCo.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "CS Archimedes"; src: url("./retro-fonts/archimedes/code-studio-archimedes.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "CS Oric"; src: url("./retro-fonts/oric/code-studio-oric.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "CS BBC Bitmap"; src: url("./retro-fonts/bbc-bitmap/bbc-micro.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "CS BBC Narrow"; src: url("./retro-fonts/bbc-bitmap/code-studio-bbc-narrow.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "CS BBC Wide"; src: url("./retro-fonts/bbc-bitmap/code-studio-bbc-wide.ttf") format("truetype"); font-display: swap; }
+
+[data-cs-retro="c64"] { --cs-retro-font: "CS C64"; --cs-retro-bg: #352879; --cs-retro-ink: #6c5eb5; --cs-retro-border: #6c5eb5; }
+[data-cs-retro="bbc"] { --cs-retro-font: "CS BBC Mode 7"; --cs-retro-bg: #000; --cs-retro-ink: #fff; --cs-retro-size: 20px; }
+[data-cs-retro="spectrum"] { --cs-retro-font: "CS Spectrum"; --cs-retro-bg: #d7d7d7; --cs-retro-ink: #000; }
+[data-cs-retro="cpc"] { --cs-retro-font: "CS CPC"; --cs-retro-bg: #000080; --cs-retro-ink: #ffff00; }
+[data-cs-retro="apple"] { --cs-retro-font: "CS Apple II"; --cs-retro-bg: #000; --cs-retro-ink: #80ff80; }
+[data-cs-retro="dos"] { --cs-retro-font: "CS DOS"; --cs-retro-bg: #000; --cs-retro-ink: #aaa; }
+[data-cs-retro="qbasic"] { --cs-retro-font: "CS DOS"; --cs-retro-bg: #000080; --cs-retro-ink: #aaa; }
+[data-cs-retro="atari"] { --cs-retro-font: "CS Atari"; --cs-retro-bg: #285a9f; --cs-retro-ink: #9ed2ff; --cs-retro-border: #000; }
+[data-cs-retro="amiga"] { --cs-retro-font: "CS Amiga"; --cs-retro-bg: #0055aa; --cs-retro-ink: #fff; }
+[data-cs-retro="mac"] { --cs-retro-font: "CS Macintosh"; --cs-retro-bg: #fff; --cs-retro-ink: #000; --cs-retro-border: #fff; --cs-retro-size: 32px; --cs-retro-leading: 1; }
+[data-cs-retro="st"] { --cs-retro-font: "CS ST"; --cs-retro-bg: #000; --cs-retro-ink: #fff; --cs-retro-leading: 1.25; }
+[data-cs-retro="msx"] { --cs-retro-font: "CS MSX"; --cs-retro-bg: #5455ed; --cs-retro-ink: #fff; --cs-retro-border: #5455ed; --cs-retro-leading: 1.25; }
+[data-cs-retro="zx81"] { --cs-retro-font: "CS ZX81"; --cs-retro-bg: #fff; --cs-retro-ink: #000; --cs-retro-leading: 1.25; }
+[data-cs-retro="dragon"] { --cs-retro-font: "CS Dragon"; --cs-retro-bg: #00ff00; --cs-retro-ink: #003000; --cs-retro-leading: 1; --cs-retro-size: 24px; }
+[data-cs-retro="archimedes"] { --cs-retro-font: "CS Archimedes"; --cs-retro-bg: #000; --cs-retro-ink: #fff; --cs-retro-leading: 2; }
+[data-cs-retro="oric"] { --cs-retro-font: "CS Oric"; --cs-retro-bg: #fff; --cs-retro-ink: #000; --cs-retro-leading: 1.25; }
+
+[data-cs-retro="bbc"][data-cs-retro-mode] { --cs-retro-font: "CS BBC Bitmap"; --cs-retro-size: 16px; --cs-retro-leading: 1; }
+[data-cs-retro="bbc"][data-cs-retro-mode="7"] { --cs-retro-font: "CS BBC Mode 7"; --cs-retro-size: 20px; --cs-retro-leading: 1.5; }
+[data-cs-retro="bbc"][data-cs-retro-mode="0"],
+[data-cs-retro="bbc"][data-cs-retro-mode="3"] { --cs-retro-font: "CS BBC Narrow"; }
+[data-cs-retro="bbc"][data-cs-retro-mode="2"],
+[data-cs-retro="bbc"][data-cs-retro-mode="5"] { --cs-retro-font: "CS BBC Wide"; }
+[data-cs-retro="bbc"][data-cs-retro-mode="3"],
+[data-cs-retro="bbc"][data-cs-retro-mode^="6-"] { --cs-retro-leading: 1.25; }
+[data-cs-retro="bbc"][data-cs-retro-mode^="6-"] { --cs-retro-lines: repeating-linear-gradient(to bottom, transparent 0 1em, #000 1em 1.25em); }
+[data-cs-retro="bbc"][data-cs-retro-mode="6-blue"] { --cs-retro-bg: #0000ff; }
+[data-cs-retro="bbc"][data-cs-retro-mode="6-red"] { --cs-retro-bg: #ff0000; }
+
+.cs-card[data-cs-retro="mac"] { border: 2px solid #000; box-shadow: 3px 3px #000; }
+.cs-card[data-cs-retro="mac"] .cs-caption {
+  background: #fff; color: #000; border: 1px solid #000; padding: 3px 8px;
+  font-family: "CS Chicago", system-ui; font-size: 16px;
+}
+.cs-card[data-cs-retro="mac"] .cs-caption span { color: inherit; font: inherit; }
+
+.cs-card[data-cs-retro] { --cs-bg: var(--cs-retro-bg); border-radius: 0; }
+.cs-card[data-cs-retro] .cs-code,
+.cs-format-preview[data-cs-retro] .cs-format-column pre {
+  background: var(--cs-retro-bg) !important;
+  background-image: var(--cs-retro-lines, none) !important;
+  background-attachment: local !important;
+  color: var(--cs-retro-ink);
+  border: 12px solid var(--cs-retro-border, var(--cs-retro-bg)) !important;
+  border-radius: 0;
+  font-size: max(var(--cs-retro-size, 16px), var(--cs-font-size, 16px)) !important;
+  line-height: var(--cs-retro-leading, 1.5);
+  font-synthesis: none;
+}
+.cs-card[data-cs-retro] .cs-code,
+.cs-card[data-cs-retro] .cs-code *,
+.cs-format-preview[data-cs-retro] .cs-format-column pre,
+.cs-format-preview[data-cs-retro] .cs-format-column pre * {
+  font-family: var(--cs-retro-font), "Code Block Studio Mono", monospace !important;
+  font-style: normal;
+  font-weight: 400;
+}
+.cs-card[data-cs-retro] .cs-code code { font-size: inherit !important; line-height: inherit !important; }
+.cs-card[data-cs-retro] .cs-line { min-height: calc(var(--cs-retro-leading, 1.5) * 1em); }
+.cs-card[data-cs-retro] .cs-code span { color: inherit; }
+/* BASIC listings already contain program numbers; an extra gutter is not part of the original screen. */
+.cs-card[data-cs-retro] .cs-line::before { display: none; }
+.cs-card[data-cs-retro] .cs-line { padding-left: 8px; }
+.cs-card[data-cs-retro] .cs-line:hover { background: transparent; }
+.cs-card[data-cs-retro] .cs-code ::selection { background: var(--cs-retro-ink); color: var(--cs-retro-bg); }
+.cs-format-preview[data-cs-retro] .cs-diff-line { height: calc(var(--cs-retro-leading, 1.5) * 1em); }
+.cs-card[data-cs-retro="bbc"][data-cs-retro-mode^="6-"] .cs-code,
+.cs-format-preview[data-cs-retro="bbc"][data-cs-retro-mode^="6-"] .cs-format-column pre { padding: 0; border-width: 0 !important; }
+.cs-format-preview[data-cs-retro] .cs-diff-line::before,
+.cs-format-preview[data-cs-retro] .cs-diff-eol,
+.cs-format-preview[data-cs-retro] .cs-diff-space::after,
+.cs-format-preview[data-cs-retro] .cs-diff-tab::after { color: inherit; }
+.cs-format-preview[data-cs-retro] .cs-diff-original mark { background: #8884; color: inherit; }
+.cs-format-preview[data-cs-retro] .cs-diff-formatted mark,
+.cs-format-preview[data-cs-retro] .cs-diff-formatted .cs-diff-eol { background: #00b86b44; color: inherit; }

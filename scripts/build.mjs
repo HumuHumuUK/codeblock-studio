@@ -8,7 +8,7 @@ const buildRequire = createRequire(import.meta.url);
 
 await rm('dist', { recursive: true, force: true });
 await mkdir('dist');
-const runtime = await build({ entryPoints: ['src/index.ts', 'src/renderer.ts', 'src/editor.ts', 'src/formatCode.ts', 'src/replaceFence.ts', 'src/formatPreview.ts'], outdir: 'dist',
+const runtime = await build({ entryPoints: ['src/index.ts', 'src/renderer.ts', 'src/editor.ts', 'src/formatCode.ts', 'src/replaceFence.ts', 'src/formatPreview.ts', 'src/retro.ts'], outdir: 'dist',
   bundle: true, platform: 'node', format: 'cjs', target: 'es2020', minify: true, keepNames: true, metafile: true,
   // Formatter plugins use Prettier's document builders. Resolve those imports
   // to the portable standalone build, keeping Node's config loader out.
@@ -18,8 +18,10 @@ const runtime = await build({ entryPoints: ['src/index.ts', 'src/renderer.ts', '
   // Each WASM loader receives explicit bytes; its unused URL default is never called.
   logOverride: { 'empty-import-meta': 'silent' } });
 await build({ entryPoints: ['src/viewer.ts', 'src/formatDialog.ts'], outdir: 'dist',
-  bundle: true, platform: 'browser', format: 'iife', target: 'es2020', minify: true });
-for (const f of ['manifest.json', 'code-studio.css', 'formatDialog.css']) await copyFile(`src/${f}`, `dist/${f}`);
+  bundle: true, platform: 'browser', format: 'iife', target: 'es2020', minify: true,
+  define: { codeStudioLanguages: JSON.stringify(buildRequire('../dist/renderer.js').codeLanguages()) } });
+for (const f of ['manifest.json', 'code-studio.css', 'formatDialog.css', 'retro.css']) await copyFile(`src/${f}`, `dist/${f}`);
+await cp('assets/retro-fonts', 'dist/retro-fonts', { recursive: true });
 for (const f of ['LICENSE', 'CREDITS.md']) await copyFile(f, `dist/${f}`);
 await mkdir('dist/assets');
 for (const size of [48, 128]) await copyFile(`assets/icon-${size}.png`, `dist/assets/icon-${size}.png`);
@@ -65,10 +67,12 @@ for (const file of await readdir('vendor-licenses')) await copyFile(`vendor-lice
 await cp('node_modules/@scalar/rust-fmt/licenses', 'dist/vendor-licenses/rust', { recursive: true });
 const manifest = JSON.parse(await readFile('src/manifest.json', 'utf8'));
 await mkdir('publish', { recursive: true });
+const examples = await readFile('examples/code-block-studio.md');
+await writeFile('publish/code-block-studio-examples.md', examples);
 const archive = `publish/${manifest.id}.jpl`;
 execFileSync('tar', ['--format=ustar', '-cf', archive, '-C', 'dist',
   'index.js', 'renderer.js', 'editor.js', 'viewer.js', 'formatDialog.js', 'manifest.json', 'code-studio.css', 'formatDialog.css',
-  'jetbrains-mono.woff2', 'LICENSE', 'CREDITS.md', 'FONT-LICENSE.txt', 'HIGHLIGHT-LICENSE.txt', 'PRETTIER-LICENSE.txt', 'MARKDOWN-IT-LICENSE.txt', 'PRETTIER-NOTICES.md', 'MARKDOWN-IT-DEPENDENCIES.txt',
+  'jetbrains-mono.woff2', 'retro.css', 'retro-fonts', 'LICENSE', 'CREDITS.md', 'FONT-LICENSE.txt', 'HIGHLIGHT-LICENSE.txt', 'PRETTIER-LICENSE.txt', 'MARKDOWN-IT-LICENSE.txt', 'PRETTIER-NOTICES.md', 'MARKDOWN-IT-DEPENDENCIES.txt',
   'BUNDLED-DEPENDENCY-LICENSES.txt', 'vendor-licenses', 'assets', ...wasmAssets.map(([, file]) => file)]);
 const hash = createHash('sha256').update(await readFile(archive)).digest('hex');
 let publishCommit = '';
@@ -82,5 +86,6 @@ try {
 const info = JSON.stringify({ ...manifest, _publish_hash: `sha256:${hash}`, _publish_commit: publishCommit }, null, 2) + '\n';
 await writeFile(`publish/${manifest.id}.json`, info);
 const infoHash = createHash('sha256').update(info).digest('hex');
-await writeFile('publish/SHA256SUMS', `${hash}  ${manifest.id}.jpl\n${infoHash}  ${manifest.id}.json\n`);
+const examplesHash = createHash('sha256').update(examples).digest('hex');
+await writeFile('publish/SHA256SUMS', `${hash}  ${manifest.id}.jpl\n${infoHash}  ${manifest.id}.json\n${examplesHash}  code-block-studio-examples.md\n`);
 console.log(`Built ${archive}`);
