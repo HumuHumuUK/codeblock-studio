@@ -7,8 +7,9 @@
 - Included an importable Markdown test note beside the installer and in its checksums, with all retro screen families enabled and examples for every supported formatter language/dialect.
 - Reorganised the 77-example note with main programming languages first, then web, data/configuration and SQL, followed by the retro computers and BBC display modes. Added readable headings, section links and updated test instructions.
 
-## 1.7.4 — 6 November 2026 (local candidate)
+## 1.7.4 — 6 November 2026 (public preview)
 
+- Published matching Gitea and GitHub prereleases with the installer, metadata, 77-example Markdown note, reviewed source ZIP and checksums. The release preserves the validated build bytes; Joplin catalogue publication remains on hold.
 - Removed the extra blank top row and leading black rule from the BBC Mode 6 blue/red screens. Black gaps now span the full width, with eight parts coloured paper to two parts black gap, in code cards and both formatting comparison panes.
 
 ## 1.7.3 — 6 November 2026 (local candidate)

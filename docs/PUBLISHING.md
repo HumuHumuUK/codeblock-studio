@@ -1,6 +1,8 @@
 # Publication preparation
 
-Updated on 6 November 2026. Candidate: **Code Block Studio 1.7.4**.
+Updated on 6 November 2026. Published preview: **Code Block Studio 1.7.4**.
+
+The [GitHub 1.7.4 prerelease](https://github.com/HumuHumuUK/codeblock-studio/releases/tag/v1.7.4) contains the installer, matching metadata, 77-example Markdown note, reviewed source ZIP and checksums. The matching release is also retained in Gitea's `codeblock-studio-public` repository. Both use tag `v1.7.4` at reviewed public source `e813a2aa24abecde2f931fc2aa7285c7510182b3`; all five uploaded assets were downloaded and checksum-verified on both services. The preserved build metadata retains original commit `030fd2b73dfdf109352e7ef1cc94e990cd93ce69`, whose email-corrected replacement has exactly the same source tree. The release notes explain that mapping; no release payload was rebuilt or changed.
 
 **Gitea and GitHub source publication are authorised; npm and Joplin catalogue publication remain on hold.** Gitea is the primary development repository. Leonard requested public hosting under `HumuHumuUK` and supplied the Ko-fi support URL. The package remains `private: true`, so public GitHub hosting does not enable npm publication. There is no automatic release or registry submission workflow.
 

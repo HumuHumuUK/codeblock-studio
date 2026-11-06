@@ -167,7 +167,7 @@ Code Block Studio is independent of the Joplin theme, so the cards stay dark in 
 
 Requires Joplin Desktop; the declared minimum is 3.3. Earlier versions were checked on Joplin Desktop 3.7.22 for Linux. Final live acceptance of the current candidate, and verification of the minimum version, remain pending. Windows, macOS and mobile have not been live-tested; mobile is not declared as supported.
 
-This is a publication candidate and is not yet listed in the official plugin catalogue. Download the preview installer from [GitHub Releases](https://github.com/HumuHumuUK/codeblock-studio/releases), then install it manually:
+Version **1.7.4** is available as a [public preview](https://github.com/HumuHumuUK/codeblock-studio/releases/tag/v1.7.4) and is not yet listed in the official plugin catalogue. Download the [Joplin installer](https://github.com/HumuHumuUK/codeblock-studio/releases/download/v1.7.4/local.lpowers.code-studio.jpl), then install it manually:
 
 1. Open **Tools → Options → Plugins**.
 2. Choose the gear menu → **Install from file** and select `local.lpowers.code-studio.jpl`.
@@ -175,7 +175,7 @@ This is a publication candidate and is not yet listed in the official plugin cat
 
 Download the actual `.jpl` installer file, rather than saving a repository's file-view web page. A fresh local build is available under `publish/`.
 
-The build also supplies `publish/code-block-studio-examples.md`. Import it into Joplin as a Markdown file to try all 16 retro screen families, BBC mode presets and examples for every supported formatter language/dialect. The retro displays start enabled; untick them to compare with normal highlighting. No sample code is executed.
+Download the [77-example Markdown note](https://github.com/HumuHumuUK/codeblock-studio/releases/download/v1.7.4/code-block-studio-examples.md), also supplied by local builds as `publish/code-block-studio-examples.md`. Import it into Joplin as a Markdown file to try all 16 retro screen families, BBC mode presets and examples for every supported formatter language/dialect. The retro displays start enabled; untick them to compare with normal highlighting. No sample code is executed.
 
 Disable overlapping code-block appearance plugins if they interfere with the cards.
 
