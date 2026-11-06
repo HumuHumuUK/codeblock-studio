@@ -1,8 +1,9 @@
 # Change history
 
-## 1.7.5 — 6 November 2026 (catalogue candidate)
+## 1.7.5 — 6 November 2026 (npm release)
 
 - Prepared the first npm/Joplin catalogue package with the reviewed description and README write-up, plus six screenshots covering code cards, formatting, retro displays, BBC modes, language search and wrapping.
+- Published the reviewed package on npm and verified the downloaded tarball against the preserved original. Joplin catalogue ingestion is a separate, pending step.
 - Set the minimum Joplin Desktop version to 3.7.22, matching the Linux development checks, and retained the existing plugin ID and settings. Windows/macOS remain unverified; mobile is unsupported.
 - Kept the 1.7.4 release files unchanged. Plugin runtime behaviour is unchanged from 1.7.4.
 

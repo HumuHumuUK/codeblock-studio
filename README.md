@@ -171,6 +171,8 @@ Code Block Studio is independent of the Joplin theme, so the cards stay dark in 
 
 ## Install or remove
 
+Version 1.7.5 is [published on npm](https://www.npmjs.com/package/joplin-plugin-code-block-studio). Joplin catalogue import is pending; the manual installer below is available now.
+
 Requires **Joplin Desktop 3.7.22 or later**, matching the version used for Linux development checks. Windows and macOS have not been live-tested. Mobile is not supported. Retro displays are static reproductions; they do not emulate or execute a computer program.
 
 The [1.7.5 release](https://github.com/HumuHumuUK/codeblock-studio/releases/tag/v1.7.5) provides the installer and example note. Search for **Code Block Studio** in Joplin's Plugins settings once the catalogue import has completed, or download the [Joplin installer](https://github.com/HumuHumuUK/codeblock-studio/releases/download/v1.7.5/local.lpowers.code-studio.jpl) and install it manually:
