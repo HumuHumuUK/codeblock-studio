@@ -23,6 +23,7 @@ function fixture(t, exclusions = true) {
   mkdirSync(source);
   mkdirSync(publicSource);
   git(source, 'init', '--quiet', '--initial-branch=main');
+  git(source, 'config', 'user.email', 'development@example.invalid');
   git(publicSource, 'init', '--quiet', '--initial-branch=main');
   writeFileSync(join(source, 'README.md'), 'Approved source\n');
   writeFileSync(join(source, 'new.txt'), 'New public file\n');
@@ -60,6 +61,15 @@ test('public preparation stages committed files and deletions without transferri
   assert.match(git(checkout, 'diff', '--cached', '--name-status'), /A\s+new\.txt/);
   assert.equal(git(checkout, 'rev-parse', 'HEAD'), publicHead);
   assert.equal(git(checkout, 'remote', 'get-url', 'origin'), publicRemote);
+  const publicEmail = '17731374+HumuHumuUK@users.noreply.github.com';
+  assert.equal(git(checkout, 'config', '--local', 'user.email'), publicEmail);
+  const env = { ...process.env, GIT_AUTHOR_NAME: 'Publication test', GIT_COMMITTER_NAME: 'Publication test' };
+  delete env.GIT_AUTHOR_EMAIL;
+  delete env.GIT_COMMITTER_EMAIL;
+  for (const identity of ['GIT_AUTHOR_IDENT', 'GIT_COMMITTER_IDENT']) {
+    assert.ok(execFileSync('git', ['var', identity], { cwd: checkout, env, encoding: 'utf8' }).includes(`<${publicEmail}>`));
+  }
+  assert.equal(git(source, 'config', '--local', 'user.email'), 'development@example.invalid');
   assert.notEqual(spawnSync('git', ['cat-file', '-e', privateHead], { cwd: checkout }).status, 0);
   assert.equal(git(privateRemote, 'rev-parse', 'main'), privateHead);
   assert.equal(git(publicRemote, 'rev-parse', 'main'), publicHead);

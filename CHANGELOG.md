@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Set the public preparation checkout's Git email to the existing GitHub noreply address so public commits do not inherit the private development email.
 - Added a manual public-source preparation command that exports committed development files into a fresh public checkout for review, preserving separate histories and leaving publication manual.
 - Included an importable Markdown test note beside the installer and in its checksums, with all retro screen families enabled and examples for every supported formatter language/dialect.
 - Reorganised the 77-example note with main programming languages first, then web, data/configuration and SQL, followed by the retro computers and BBC display modes. Added readable headings, section links and updated test instructions.

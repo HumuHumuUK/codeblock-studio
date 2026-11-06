@@ -39,6 +39,8 @@ try {
   if (git(['rev-list', '--max-parents=0', 'HEAD'], checkout).split('\n').some(commit => privateRoots.has(commit))) {
     throw new Error('The public repository shares private history; review the repositories before publishing.');
   }
+  // Public commits must not inherit the private checkout's personal email.
+  git(['config', '--local', 'user.email', '17731374+HumuHumuUK@users.noreply.github.com'], checkout);
   for (const name of readdirSync(checkout)) {
     if (name !== '.git') rmSync(join(checkout, name), { recursive: true, force: true });
   }
